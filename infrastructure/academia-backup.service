@@ -1,0 +1,11 @@
+[Unit]
+Description=Backup PostgreSQL da academia
+After=postgresql.service
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/academia/backup.env
+ExecStart=/usr/local/lib/academia/backup.sh
+UMask=0077
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/academia/backups
