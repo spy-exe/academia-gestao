@@ -22,6 +22,12 @@ export default defineConfig({
       },
     },
   },
+  preview: {
+    headers: {
+      "Content-Security-Policy":
+        "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self'",
+    },
+  },
   server: {
     proxy: {
       "/api": process.env.API_PROXY_TARGET ?? "http://127.0.0.1:8080",

@@ -39,3 +39,29 @@ test("tabelas permanecem dentro do viewport móvel", async ({ page }) => {
     ),
   ).toBe(true);
 });
+
+test("a aplicação funciona sob CSP sem tentar executar código dinâmico", async ({
+  page,
+}) => {
+  const cdp = await page.context().newCDPSession(page);
+  const issues: string[] = [];
+  await cdp.send("Audits.enable");
+  cdp.on("Audits.issueAdded", ({ issue }) => {
+    if (issue.code === "ContentSecurityPolicyIssue")
+      issues.push(JSON.stringify(issue.details));
+  });
+  await page.goto("/");
+  await expect(
+    page.getByRole("heading", { name: "Visão geral", exact: true }),
+  ).toBeVisible();
+  await page.goto("/alunos");
+  await page.getByRole("button", { name: "Novo aluno", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Salvar cadastro", exact: true })
+    .click();
+  await expect(
+    page.getByText("Informe este campo.", { exact: true }),
+  ).toBeVisible();
+  expect(issues).toEqual([]);
+  await cdp.detach();
+});

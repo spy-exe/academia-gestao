@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { z } from "./validation";
 import { Activity, ArrowRight, Eye, EyeOff, ShieldCheck } from "lucide-react";
 import { login } from "./api";
 import { Button } from "./ui";
