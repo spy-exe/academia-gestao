@@ -1,0 +1,282 @@
+[
+  {
+    "label": "dashboard",
+    "width": 360,
+    "height": 800,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "label": "alunos",
+    "width": 360,
+    "height": 800,
+    "overflow": true,
+    "errors": []
+  },
+  {
+    "label": "planos",
+    "width": 360,
+    "height": 800,
+    "overflow": true,
+    "errors": []
+  },
+  {
+    "label": "professores",
+    "width": 360,
+    "height": 800,
+    "overflow": true,
+    "errors": []
+  },
+  {
+    "label": "mensalidades",
+    "width": 360,
+    "height": 800,
+    "overflow": true,
+    "errors": []
+  },
+  {
+    "label": "treinos",
+    "width": 360,
+    "height": 800,
+    "overflow": true,
+    "errors": []
+  },
+  {
+    "label": "avaliacoes",
+    "width": 360,
+    "height": 800,
+    "overflow": true,
+    "errors": []
+  },
+  {
+    "label": "historico",
+    "width": 360,
+    "height": 800,
+    "overflow": true,
+    "errors": []
+  },
+  {
+    "label": "dashboard",
+    "width": 390,
+    "height": 844,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "label": "alunos",
+    "width": 390,
+    "height": 844,
+    "overflow": true,
+    "errors": []
+  },
+  {
+    "label": "planos",
+    "width": 390,
+    "height": 844,
+    "overflow": true,
+    "errors": []
+  },
+  {
+    "label": "professores",
+    "width": 390,
+    "height": 844,
+    "overflow": true,
+    "errors": []
+  },
+  {
+    "label": "mensalidades",
+    "width": 390,
+    "height": 844,
+    "overflow": true,
+    "errors": []
+  },
+  {
+    "label": "treinos",
+    "width": 390,
+    "height": 844,
+    "overflow": true,
+    "errors": []
+  },
+  {
+    "label": "avaliacoes",
+    "width": 390,
+    "height": 844,
+    "overflow": true,
+    "errors": []
+  },
+  {
+    "label": "historico",
+    "width": 390,
+    "height": 844,
+    "overflow": true,
+    "errors": []
+  },
+  {
+    "label": "dashboard",
+    "width": 768,
+    "height": 1024,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "label": "alunos",
+    "width": 768,
+    "height": 1024,
+    "overflow": true,
+    "errors": []
+  },
+  {
+    "label": "planos",
+    "width": 768,
+    "height": 1024,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "label": "professores",
+    "width": 768,
+    "height": 1024,
+    "overflow": true,
+    "errors": []
+  },
+  {
+    "label": "mensalidades",
+    "width": 768,
+    "height": 1024,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "label": "treinos",
+    "width": 768,
+    "height": 1024,
+    "overflow": true,
+    "errors": []
+  },
+  {
+    "label": "avaliacoes",
+    "width": 768,
+    "height": 1024,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "label": "historico",
+    "width": 768,
+    "height": 1024,
+    "overflow": true,
+    "errors": []
+  },
+  {
+    "label": "dashboard",
+    "width": 1366,
+    "height": 768,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "label": "alunos",
+    "width": 1366,
+    "height": 768,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "label": "planos",
+    "width": 1366,
+    "height": 768,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "label": "professores",
+    "width": 1366,
+    "height": 768,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "label": "mensalidades",
+    "width": 1366,
+    "height": 768,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "label": "treinos",
+    "width": 1366,
+    "height": 768,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "label": "avaliacoes",
+    "width": 1366,
+    "height": 768,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "label": "historico",
+    "width": 1366,
+    "height": 768,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "label": "dashboard",
+    "width": 1920,
+    "height": 1080,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "label": "alunos",
+    "width": 1920,
+    "height": 1080,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "label": "planos",
+    "width": 1920,
+    "height": 1080,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "label": "professores",
+    "width": 1920,
+    "height": 1080,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "label": "mensalidades",
+    "width": 1920,
+    "height": 1080,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "label": "treinos",
+    "width": 1920,
+    "height": 1080,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "label": "avaliacoes",
+    "width": 1920,
+    "height": 1080,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "label": "historico",
+    "width": 1920,
+    "height": 1080,
+    "overflow": false,
+    "errors": []
+  }
+]

@@ -1,0 +1,17 @@
+@theme {
+  --color-primary: #244c72;
+  --color-background: #f5f7fa;
+  --color-surface: #ffffff;
+  --color-text: #192b3b;
+  --color-muted: #586878;
+  --color-border: #dce3eb;
+  --color-success: #176548;
+  --color-danger: #ad3434;
+  --color-warning: #8b540f;
+  --font-sans: "Source Sans 3, system-ui, sans-serif";
+  --font-display: "Manrope, system-ui, sans-serif";
+  --radius-DEFAULT: 0.5rem;
+  --radius-lg: 0.875rem;
+  --spacing-unit: 0.25rem;
+  --spacing-page-max: 88rem;
+}

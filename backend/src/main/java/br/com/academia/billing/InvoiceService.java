@@ -11,13 +11,13 @@ import java.math.BigDecimal;
 import java.util.*;
 @Service @Transactional
 public class InvoiceService {
- private final InvoiceRepository repository;private final EntityManager em;private final ActivityService activities;
- public InvoiceService(InvoiceRepository repository,EntityManager em,ActivityService activities) {this.repository=repository;this.em=em;this.activities=activities;}
+ private final br.com.academia.student.StudentRepository students; private final InvoiceRepository repository;private final EntityManager em;private final ActivityService activities;private final Clock clock;
+ public InvoiceService(br.com.academia.student.StudentRepository students,InvoiceRepository repository,EntityManager em,ActivityService activities,Clock clock) {this.students=students;this.clock=clock;this.repository=repository;this.em=em;this.activities=activities;}
  public record Request(@NotNull @Positive Long studentId,@NotBlank @Pattern(regexp="\\d{4}-(0[1-9]|1[0-2])") String competence,@NotNull LocalDate dueDate) {}
  public record Payment(@NotNull @PastOrPresent LocalDate paidOn) {}
  public record Person(Long id,String name) {}
  public record View(Long id,Person student,String competence,LocalDate dueDate,BigDecimal amount,int periodMonths,LocalDate paidOn,String status) {}
- private LocalDate today(){return LocalDate.now(ZoneId.of("America/Sao_Paulo"));}
+ private LocalDate today(){return LocalDate.now(clock);}
  public View view(Invoice e){return new View(e.id,new Person(e.student.id,e.student.name),YearMonth.from(e.competence).toString(),e.dueDate,e.amount,e.periodMonths,e.paidOn,e.status(today()));}
  @Transactional(readOnly=true) public Page<View> list(String q,Long studentId,String status,Pageable page){
   if(status!=null&&!Set.of("PAID","OPEN","OVERDUE").contains(status))throw new IllegalArgumentException("Status inválido");
@@ -33,11 +33,15 @@ public class InvoiceService {
  }
  @Transactional(readOnly=true) public View get(long id){return view(repository.findById(id).orElseThrow(ApiException::missing));}
  public View create(Request r){
-  var student=em.find(Student.class,r.studentId(),LockModeType.PESSIMISTIC_WRITE);if(student==null)throw ApiException.missing();
+  var student=students.lockById(r.studentId()).orElseThrow(ApiException::missing);
   var competence=YearMonth.parse(r.competence()).atDay(1);
   var existing=repository.findByStudentIdAndCompetence(student.id,competence);if(existing.isPresent())return view(existing.get());
   if(!student.active)throw ApiException.conflict("Aluno arquivado não pode receber novas mensalidades.");
   if(student.plan==null||!student.plan.active)throw ApiException.conflict("Associe o aluno a um plano ativo antes de emitir a mensalidade.");
+  em.lock(student.plan,LockModeType.PESSIMISTIC_WRITE);em.refresh(student.plan);
+  if(!student.plan.active)throw ApiException.conflict("O plano foi desativado. Atualize o cadastro.");
+  var end=competence.plusMonths(student.plan.periodMonths);
+  if(repository.overlaps(student.id,competence,end))throw ApiException.conflict("Já existe uma mensalidade cobrindo parte deste período.");
   Invoice e=new Invoice();e.student=student;e.competence=competence;e.dueDate=r.dueDate();e.amount=student.plan.price;e.periodMonths=student.plan.periodMonths;
   repository.saveAndFlush(e);activities.record("Mensalidade emitida · "+student.name+" · "+r.competence());return view(e);
  }

@@ -9,7 +9,7 @@ import java.util.Set;
 public class StudentController {
  private final StudentService service;
  public StudentController(StudentService service) {this.service=service;}
- @GetMapping public Page<StudentService.View> list(@RequestParam(defaultValue="") String q,@RequestParam(required=false) Boolean active,@RequestParam(defaultValue="0") int page,@RequestParam(defaultValue="10") int size,@RequestParam(defaultValue="name") String sort,@RequestParam(defaultValue="asc") String direction) {return service.list(q,active,Pages.of(page,size,sort,direction,Set.of("name","id")));}
+ @GetMapping public Page<StudentService.View> list(@RequestParam(defaultValue="") String q,@RequestParam(required=false) Boolean active,@RequestParam(required=false) Long planId,@RequestParam(defaultValue="0") int page,@RequestParam(defaultValue="10") int size,@RequestParam(defaultValue="name") String sort,@RequestParam(defaultValue="asc") String direction) {return service.list(q,active,planId,Pages.of(page,size,sort,direction,Set.of("name","id")));}
  @GetMapping("/{id}") public StudentService.View get(@PathVariable long id) {return service.get(id);}
  @PostMapping @ResponseStatus(HttpStatus.CREATED) public StudentService.View create(@Valid @RequestBody StudentService.Request r) {return service.create(r);}
  @PutMapping("/{id}") public StudentService.View update(@PathVariable long id,@Valid @RequestBody StudentService.Request r) {return service.update(id,r);}

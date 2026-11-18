@@ -14,15 +14,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 
-@SpringBootTest @AutoConfigureMockMvc @Testcontainers
-@org.springframework.test.annotation.DirtiesContext(classMode=org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS)
-class AcceptanceTest {
- @Container static PostgreSQLContainer<?> postgres=new PostgreSQLContainer<>("postgres:17-alpine");
- @DynamicPropertySource static void properties(DynamicPropertyRegistry r) {
-  r.add("spring.datasource.url",postgres::getJdbcUrl);r.add("spring.datasource.username",postgres::getUsername);r.add("spring.datasource.password",postgres::getPassword);r.add("server.servlet.session.cookie.secure",()->"false");
- }
- @Autowired MockMvc mvc; @Autowired AdministratorRepository administrators; @Autowired PasswordEncoder encoder;
- @BeforeEach void account() { if(administrators.count()==0){Administrator a=new Administrator();a.email="admin@example.test";a.passwordHash=encoder.encode("Test-only-password-2026!");administrators.save(a);} }
+class AcceptanceTest extends IntegrationSupport {
  @Test void administrativeDataRequiresAuthentication() throws Exception {mvc.perform(get("/api/auth/me")).andExpect(status().isUnauthorized());}
  @Test void providesCsrfWithoutAuthentication() throws Exception {mvc.perform(get("/api/auth/csrf")).andExpect(status().isOk()).andExpect(jsonPath("$.token").isNotEmpty());}
  @Test void rejectsLoginWithoutCsrf() throws Exception {mvc.perform(post("/api/auth/login").param("email","admin@example.test").param("password","Test-only-password-2026!")).andExpect(status().isForbidden());}

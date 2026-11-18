@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
-class FinanceTrainingTest extends AcceptanceTest {
+class FinanceTrainingTest extends IntegrationSupport {
  private final ObjectMapper json=new ObjectMapper();
  JsonNode create(String path,String body) throws Exception {return json.readTree(mvc.perform(post("/api/"+path).with(user("admin").roles("ADMIN")).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(body)).andExpect(status().isCreated()).andReturn().getResponse().getContentAsString());}
  @Test void completeFinancialAndTrainingHistory() throws Exception {
@@ -23,5 +23,11 @@ class FinanceTrainingTest extends AcceptanceTest {
   var assessment=create("assessments","{\"studentId\":"+s+",\"assessedOn\":\"2026-01-12\",\"weightKg\":80,\"heightCm\":200,\"notes\":\"\"}");assertEquals(20.0,assessment.get("bmi").asDouble());
   mvc.perform(get("/api/assessments?studentId="+s).with(user("admin").roles("ADMIN"))).andExpect(jsonPath("$.totalElements").value(1));
   mvc.perform(get("/api/dashboard").with(user("admin").roles("ADMIN"))).andExpect(status().isOk()).andExpect(jsonPath("$.activeStudents").isNumber());
+ }
+ @Test void preventsOverlappingCoveragePeriods() throws Exception {
+  long plan=create("plans","{\"name\":\"Trimestral concorrência\",\"price\":399,\"periodMonths\":3,\"benefits\":\"Acesso\",\"active\":true}").get("id").asLong();
+  long student=create("students","{\"name\":\"Aluno cobertura\",\"email\":\"coverage@example.test\",\"phone\":\"11988887777\",\"birthDate\":\"2000-01-01\",\"enrollmentDate\":\"2025-01-01\",\"planId\":"+plan+",\"active\":true}").get("id").asLong();
+  create("invoices","{\"studentId\":"+student+",\"competence\":\"2026-01\",\"dueDate\":\"2026-01-10\"}");
+  mvc.perform(post("/api/invoices").with(user("admin").roles("ADMIN")).with(csrf()).contentType(MediaType.APPLICATION_JSON).content("{\"studentId\":"+student+",\"competence\":\"2026-02\",\"dueDate\":\"2026-02-10\"}")).andExpect(status().isConflict());
  }
 }

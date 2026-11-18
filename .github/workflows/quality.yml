@@ -1,0 +1,120 @@
+name: Quality
+on: [push, pull_request]
+permissions:
+  contents: read
+concurrency:
+  group: quality-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+          cache-dependency-path: backend/pom.xml
+      - run: ./mvnw -B verify
+        working-directory: backend
+      - uses: actions/upload-artifact@v4
+        with:
+          name: backend-verified
+          path: |
+            backend/target/academia-gestao-1.0.0.jar
+            backend/target/site/jacoco
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+        working-directory: frontend
+      - run: npm run lint && npm run typecheck && npm run format:check && npm test && npm run build
+        working-directory: frontend
+      - uses: actions/upload-artifact@v4
+        with:
+          name: frontend-verified
+          path: |
+            frontend/dist
+            frontend/coverage
+  e2e:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: academia
+          POSTGRES_PASSWORD: ci-database-only
+          POSTGRES_DB: academia_test
+        ports: ['5432:5432']
+        options: --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DB_URL: jdbc:postgresql://127.0.0.1:5432/academia_test
+      DB_USER: academia
+      DB_PASSWORD: ci-database-only
+      COOKIE_SECURE: 'false'
+      E2E_BASE_URL: http://127.0.0.1:4173
+      E2E_EMAIL: admin@example.test
+      E2E_AUTH_STATE: /tmp/academia-auth.json
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+          cache-dependency-path: backend/pom.xml
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Prepare isolated administrator
+        run: |
+          password=$(openssl rand -hex 24)
+          echo "::add-mask::$password"
+          echo "E2E_PASSWORD=$password" >> "$GITHUB_ENV"
+          ./backend/mvnw -B -f backend/pom.xml package -DskipTests
+          ADMIN_EMAIL="$E2E_EMAIL" ADMIN_PASSWORD="$password" java -jar backend/target/academia-gestao-1.0.0.jar --spring.profiles.active=bootstrap --server.port=0
+      - name: Start real services
+        run: |
+          java -jar backend/target/academia-gestao-1.0.0.jar > /tmp/backend.log 2>&1 &
+          cd frontend
+          npm ci
+          npm run build
+          npx vite --host 127.0.0.1 --port 4173 > /tmp/frontend.log 2>&1 &
+      - run: npx playwright install --with-deps chromium
+        working-directory: frontend
+      - name: Wait for application
+        run: |
+          for attempt in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:8080/actuator/health && curl -fsS http://127.0.0.1:4173/ > /dev/null; then exit 0; fi
+            sleep 2
+          done
+          exit 1
+      - run: npm run test:e2e
+        working-directory: frontend
+  secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci && npm audit --audit-level=high
+        working-directory: frontend

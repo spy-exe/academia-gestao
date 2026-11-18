@@ -15,6 +15,6 @@ public class ApiErrors {
   Map<String,String> fields=new LinkedHashMap<>();e.getBindingResult().getFieldErrors().forEach(f -> fields.putIfAbsent(f.getField(),f.getDefaultMessage()));p.setProperty("fields",fields);return ResponseEntity.badRequest().body(p);
  }
  @ExceptionHandler({HttpMessageNotReadableException.class,MethodArgumentTypeMismatchException.class,IllegalArgumentException.class}) ResponseEntity<ProblemDetail> bad(Exception e) {return problem(HttpStatus.BAD_REQUEST,"Dados inválidos. Confira os valores e formatos.");}
- @ExceptionHandler({DataIntegrityViolationException.class,ObjectOptimisticLockingFailureException.class}) ResponseEntity<ProblemDetail> conflict(Exception e) {return problem(HttpStatus.CONFLICT,"O registro já existe, possui vínculos ou foi alterado. Atualize os dados.");}
+ @ExceptionHandler({DataIntegrityViolationException.class,ObjectOptimisticLockingFailureException.class,jakarta.persistence.OptimisticLockException.class}) ResponseEntity<ProblemDetail> conflict(Exception e) {return problem(HttpStatus.CONFLICT,"O registro já existe, possui vínculos ou foi alterado. Atualize os dados.");}
  private ResponseEntity<ProblemDetail> problem(HttpStatus status,String detail) {return ResponseEntity.status(status).body(ProblemDetail.forStatusAndDetail(status,detail));}
 }

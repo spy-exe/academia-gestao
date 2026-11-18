@@ -7,11 +7,11 @@ import java.time.*;
 import java.util.*;
 @RestController @RequestMapping("/api/dashboard")
 public class DashboardController {
- private final JdbcTemplate jdbc;private final ActivityService activities;
- public DashboardController(JdbcTemplate jdbc,ActivityService activities){this.jdbc=jdbc;this.activities=activities;}
+ private final JdbcTemplate jdbc;private final ActivityService activities;private final Clock clock;
+ public DashboardController(JdbcTemplate jdbc,ActivityService activities,Clock clock){this.clock=clock;this.jdbc=jdbc;this.activities=activities;}
  @GetMapping @Transactional(readOnly=true,isolation=org.springframework.transaction.annotation.Isolation.REPEATABLE_READ)
  public Map<String,Object> dashboard(){
-  var today=LocalDate.now(ZoneId.of("America/Sao_Paulo"));var start=today.withDayOfMonth(1);
+  var today=LocalDate.now(clock);var start=today.withDayOfMonth(1);
   Map<String,Object> result=new LinkedHashMap<>();
   result.put("activeStudents",jdbc.queryForObject("select count(*) from students where active",Long.class));
   result.put("activeTeachers",jdbc.queryForObject("select count(*) from teachers where active",Long.class));

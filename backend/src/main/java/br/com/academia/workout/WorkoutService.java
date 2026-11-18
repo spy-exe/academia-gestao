@@ -15,7 +15,7 @@ public class WorkoutService {
  private final WorkoutRepository repository;private final StudentRepository students;private final TeacherRepository teachers;private final ActivityService activities;
  public WorkoutService(WorkoutRepository repository,StudentRepository students,TeacherRepository teachers,ActivityService activities){this.repository=repository;this.students=students;this.teachers=teachers;this.activities=activities;}
  public record ExerciseRequest(@NotBlank @Size(max=120) String name,@NotNull @Min(1) @Max(30) Integer sets,@NotBlank @Size(max=40) String repetitions,@NotNull @DecimalMin("0") @DecimalMax("1000") @Digits(integer=4,fraction=2) BigDecimal loadKg,@NotNull @Min(0) @Max(1800) Integer restSeconds,@NotNull @Size(max=500) String notes){}
- public record Request(@NotBlank @Size(max=120) String name,@NotNull @Positive Long studentId,@NotNull @Positive Long teacherId,@NotNull @PastOrPresent LocalDate issuedOn,@NotNull @Size(max=2000) String notes,@NotEmpty @Size(max=50) List<@Valid ExerciseRequest> exercises,Long version){}
+ public record Request(@NotBlank @Size(max=120) String name,@NotNull @Positive Long studentId,@NotNull @Positive Long teacherId,@NotNull @PastOrPresent LocalDate issuedOn,@NotNull @Size(max=2000) String notes,@NotEmpty @Size(max=50) List<@NotNull @Valid ExerciseRequest> exercises,Long version){}
  public record Person(Long id,String name){}
  public record Summary(Long id,Long version,String name,Person student,Person teacher,LocalDate issuedOn,String notes,boolean active){}
  public record View(Long id,Long version,String name,Person student,Person teacher,LocalDate issuedOn,String notes,boolean active,List<ExerciseRequest> exercises){}
@@ -27,7 +27,7 @@ public class WorkoutService {
  public View update(long id,Request r){var e=repository.findById(id).orElseThrow(ApiException::missing);if(!Objects.equals(e.version,r.version()))throw ApiException.conflict("Ficha alterada. Recarregue antes de salvar.");apply(e,r);repository.saveAndFlush(e);activities.record("Ficha atualizada · "+e.name);return view(e);}
  public void archive(long id){var e=repository.findById(id).orElseThrow(ApiException::missing);e.active=false;repository.saveAndFlush(e);activities.record("Ficha arquivada · "+e.name);}
  private void apply(Workout e,Request r){
-  var student=students.findById(r.studentId()).orElseThrow(ApiException::missing);var teacher=teachers.findById(r.teacherId()).orElseThrow(ApiException::missing);
+  var student=students.lockById(r.studentId()).orElseThrow(ApiException::missing);var teacher=teachers.lockById(r.teacherId()).orElseThrow(ApiException::missing);
   if(!student.active&&(e.student==null||!student.id.equals(e.student.id)))throw ApiException.conflict("Selecione um aluno ativo.");
   if(!teacher.active&&(e.teacher==null||!teacher.id.equals(e.teacher.id)))throw ApiException.conflict("Selecione um professor ativo.");
   e.name=r.name().trim();e.student=student;e.teacher=teacher;e.issuedOn=r.issuedOn();e.notes=r.notes().trim();e.exercises.clear();

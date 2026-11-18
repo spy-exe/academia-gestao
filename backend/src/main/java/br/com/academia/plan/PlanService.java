@@ -22,8 +22,8 @@ public class PlanService {
  }
  @Transactional(readOnly=true) public View get(long id) {return view(repository.findById(id).orElseThrow(ApiException::missing));}
  public View create(Request r) {var e=new Plan();apply(e,r);repository.saveAndFlush(e);activities.record("Plan salvo · "+e.name);return view(e);}
- public View update(long id,Request r) {var e=repository.findById(id).orElseThrow(ApiException::missing);if(!Objects.equals(e.version,r.version())) throw ApiException.conflict("Registro alterado. Recarregue antes de salvar.");apply(e,r);repository.saveAndFlush(e);activities.record("Plan salvo · "+e.name);return view(e);}
- public void archive(long id) {var e=repository.findById(id).orElseThrow(ApiException::missing);e.active=false;repository.saveAndFlush(e);activities.record("Plan arquivado · "+e.name);}
+ public View update(long id,Request r) {var e=repository.lockById(id).orElseThrow(ApiException::missing);if(!Objects.equals(e.version,r.version())) throw ApiException.conflict("Registro alterado. Recarregue antes de salvar.");apply(e,r);repository.saveAndFlush(e);activities.record("Plan salvo · "+e.name);return view(e);}
+ public void archive(long id) {var e=repository.lockById(id).orElseThrow(ApiException::missing);e.active=false;repository.saveAndFlush(e);activities.record("Plan arquivado · "+e.name);}
  private void apply(Plan e,Request r) { if(!java.util.Set.of(1,3,6,12).contains(r.periodMonths())) throw new IllegalArgumentException("Periodicidade inválida");
  e.name=r.name().trim();e.price=r.price();e.periodMonths=r.periodMonths();e.benefits=r.benefits().trim();e.active=r.active(); }
 }
