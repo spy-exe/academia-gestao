@@ -4,8 +4,8 @@ Fonte de regras de negócio: `tasks/plan.md`, requisitos fornecidos pelo usuári
 
 | Capability | Canonical owner | Source of truth | Allowed variants | Verification |
 |---|---|---|---|---|
-| Select/Listbox | Field em ui.tsx | Este contrato | native | teclado e popup em E2E |
-| Date | Field em ui.tsx | Este contrato | native | entrada e validação E2E |
+| Select/Listbox | Select HTML nativo | Este contrato | native | teclado e popup em E2E |
+| Date | Input HTML nativo | Este contrato | native | entrada e validação E2E |
 | Form | EntityForm | Zod e DTOs Bean Validation | criar/editar | componente e E2E |
 | Scrollbar | styles.css | DESIGN.md | global | computed style |
 | Toast | FeedbackProvider | Este contrato | success/error | live region |
