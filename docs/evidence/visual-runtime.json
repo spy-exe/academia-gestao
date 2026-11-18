@@ -10,49 +10,49 @@
     "label": "alunos",
     "width": 360,
     "height": 800,
-    "overflow": true,
+    "overflow": false,
     "errors": []
   },
   {
     "label": "planos",
     "width": 360,
     "height": 800,
-    "overflow": true,
+    "overflow": false,
     "errors": []
   },
   {
     "label": "professores",
     "width": 360,
     "height": 800,
-    "overflow": true,
+    "overflow": false,
     "errors": []
   },
   {
     "label": "mensalidades",
     "width": 360,
     "height": 800,
-    "overflow": true,
+    "overflow": false,
     "errors": []
   },
   {
     "label": "treinos",
     "width": 360,
     "height": 800,
-    "overflow": true,
+    "overflow": false,
     "errors": []
   },
   {
     "label": "avaliacoes",
     "width": 360,
     "height": 800,
-    "overflow": true,
+    "overflow": false,
     "errors": []
   },
   {
     "label": "historico",
     "width": 360,
     "height": 800,
-    "overflow": true,
+    "overflow": false,
     "errors": []
   },
   {
@@ -66,49 +66,49 @@
     "label": "alunos",
     "width": 390,
     "height": 844,
-    "overflow": true,
+    "overflow": false,
     "errors": []
   },
   {
     "label": "planos",
     "width": 390,
     "height": 844,
-    "overflow": true,
+    "overflow": false,
     "errors": []
   },
   {
     "label": "professores",
     "width": 390,
     "height": 844,
-    "overflow": true,
+    "overflow": false,
     "errors": []
   },
   {
     "label": "mensalidades",
     "width": 390,
     "height": 844,
-    "overflow": true,
+    "overflow": false,
     "errors": []
   },
   {
     "label": "treinos",
     "width": 390,
     "height": 844,
-    "overflow": true,
+    "overflow": false,
     "errors": []
   },
   {
     "label": "avaliacoes",
     "width": 390,
     "height": 844,
-    "overflow": true,
+    "overflow": false,
     "errors": []
   },
   {
     "label": "historico",
     "width": 390,
     "height": 844,
-    "overflow": true,
+    "overflow": false,
     "errors": []
   },
   {
@@ -122,7 +122,7 @@
     "label": "alunos",
     "width": 768,
     "height": 1024,
-    "overflow": true,
+    "overflow": false,
     "errors": []
   },
   {
@@ -136,7 +136,7 @@
     "label": "professores",
     "width": 768,
     "height": 1024,
-    "overflow": true,
+    "overflow": false,
     "errors": []
   },
   {
@@ -150,7 +150,7 @@
     "label": "treinos",
     "width": 768,
     "height": 1024,
-    "overflow": true,
+    "overflow": false,
     "errors": []
   },
   {
@@ -164,7 +164,7 @@
     "label": "historico",
     "width": 768,
     "height": 1024,
-    "overflow": true,
+    "overflow": false,
     "errors": []
   },
   {

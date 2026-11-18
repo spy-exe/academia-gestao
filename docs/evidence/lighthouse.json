@@ -1,0 +1,158 @@
+[
+  {
+    "page": "dashboard",
+    "url": "https://academia.malha.app/",
+    "fetchTime": "2026-11-18T18:22:15.687Z",
+    "lighthouseVersion": "13.6.0",
+    "scores": {
+      "performance": 98,
+      "accessibility": 100,
+      "best-practices": 96
+    },
+    "metrics": {
+      "first-contentful-paint": {
+        "value": 806.152,
+        "unit": "millisecond",
+        "display": "0.8 s"
+      },
+      "largest-contentful-paint": {
+        "value": 2160.652,
+        "unit": "millisecond",
+        "display": "2.2 s"
+      },
+      "cumulative-layout-shift": {
+        "value": 0.0002436620229347257,
+        "unit": "unitless",
+        "display": "0"
+      },
+      "speed-index": {
+        "value": 1672.9681255599853,
+        "unit": "millisecond",
+        "display": "1.7 s"
+      },
+      "total-blocking-time": {
+        "value": 116.5,
+        "unit": "millisecond",
+        "display": "120 ms"
+      },
+      "interactive": {
+        "value": 2258.202,
+        "unit": "millisecond",
+        "display": "2.3 s"
+      },
+      "total-byte-weight": {
+        "value": 302593,
+        "unit": "byte",
+        "display": "Total size was 296 KiB"
+      },
+      "network-requests": {}
+    },
+    "findings": [
+      {
+        "id": "unused-javascript",
+        "title": "Reduce unused JavaScript",
+        "score": 0,
+        "display": "Est savings of 127 KiB"
+      },
+      {
+        "id": "inspector-issues",
+        "title": "Issues were logged in the `Issues` panel in Chrome Devtools",
+        "score": 0
+      },
+      {
+        "id": "network-dependency-tree-insight",
+        "title": "Network dependency tree",
+        "score": 0
+      },
+      {
+        "id": "render-blocking-insight",
+        "title": "Render-blocking requests",
+        "score": 0.5
+      }
+    ]
+  },
+  {
+    "page": "alunos",
+    "url": "https://academia.malha.app/alunos",
+    "fetchTime": "2026-11-18T18:22:24.767Z",
+    "lighthouseVersion": "13.6.0",
+    "scores": {
+      "performance": 88,
+      "accessibility": 100,
+      "best-practices": 96
+    },
+    "metrics": {
+      "first-contentful-paint": {
+        "value": 866.3958,
+        "unit": "millisecond",
+        "display": "0.9 s"
+      },
+      "largest-contentful-paint": {
+        "value": 1997.3958,
+        "unit": "millisecond",
+        "display": "2.0 s"
+      },
+      "cumulative-layout-shift": {
+        "value": 0.07462632154575283,
+        "unit": "unitless",
+        "display": "0.075"
+      },
+      "speed-index": {
+        "value": 1765.412548418643,
+        "unit": "millisecond",
+        "display": "1.8 s"
+      },
+      "total-blocking-time": {
+        "value": 417.5000000000002,
+        "unit": "millisecond",
+        "display": "420 ms"
+      },
+      "interactive": {
+        "value": 2607.045800000001,
+        "unit": "millisecond",
+        "display": "2.6 s"
+      },
+      "total-byte-weight": {
+        "value": 311331,
+        "unit": "byte",
+        "display": "Total size was 304 KiB"
+      },
+      "network-requests": {}
+    },
+    "findings": [
+      {
+        "id": "total-blocking-time",
+        "title": "Total Blocking Time",
+        "score": 0.66,
+        "display": "420 ms"
+      },
+      {
+        "id": "max-potential-fid",
+        "title": "Max Potential First Input Delay",
+        "score": 0.86,
+        "display": "140 ms"
+      },
+      {
+        "id": "unused-javascript",
+        "title": "Reduce unused JavaScript",
+        "score": 0,
+        "display": "Est savings of 126 KiB"
+      },
+      {
+        "id": "inspector-issues",
+        "title": "Issues were logged in the `Issues` panel in Chrome Devtools",
+        "score": 0
+      },
+      {
+        "id": "network-dependency-tree-insight",
+        "title": "Network dependency tree",
+        "score": 0
+      },
+      {
+        "id": "render-blocking-insight",
+        "title": "Render-blocking requests",
+        "score": 0.5
+      }
+    ]
+  }
+]

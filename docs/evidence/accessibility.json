@@ -1,0 +1,497 @@
+[
+  {
+    "page": "dashboard",
+    "width": 360,
+    "form": false,
+    "violations": [],
+    "passes": 24
+  },
+  {
+    "page": "alunos",
+    "width": 360,
+    "form": false,
+    "violations": [],
+    "passes": 29
+  },
+  {
+    "page": "alunos",
+    "width": 360,
+    "form": true,
+    "violations": [],
+    "passes": 25
+  },
+  {
+    "page": "planos",
+    "width": 360,
+    "form": false,
+    "violations": [],
+    "passes": 29
+  },
+  {
+    "page": "planos",
+    "width": 360,
+    "form": true,
+    "violations": [],
+    "passes": 24
+  },
+  {
+    "page": "professores",
+    "width": 360,
+    "form": false,
+    "violations": [],
+    "passes": 29
+  },
+  {
+    "page": "professores",
+    "width": 360,
+    "form": true,
+    "violations": [],
+    "passes": 23
+  },
+  {
+    "page": "mensalidades",
+    "width": 360,
+    "form": false,
+    "violations": [],
+    "passes": 29
+  },
+  {
+    "page": "mensalidades",
+    "width": 360,
+    "form": true,
+    "violations": [],
+    "passes": 24
+  },
+  {
+    "page": "treinos",
+    "width": 360,
+    "form": false,
+    "violations": [],
+    "passes": 29
+  },
+  {
+    "page": "treinos",
+    "width": 360,
+    "form": true,
+    "violations": [],
+    "passes": 25
+  },
+  {
+    "page": "avaliacoes",
+    "width": 360,
+    "form": false,
+    "violations": [],
+    "passes": 28
+  },
+  {
+    "page": "avaliacoes",
+    "width": 360,
+    "form": true,
+    "violations": [],
+    "passes": 25
+  },
+  {
+    "page": "historico",
+    "width": 360,
+    "form": false,
+    "violations": [],
+    "passes": 32
+  },
+  {
+    "page": "dashboard",
+    "width": 390,
+    "form": false,
+    "violations": [],
+    "passes": 24
+  },
+  {
+    "page": "alunos",
+    "width": 390,
+    "form": false,
+    "violations": [],
+    "passes": 29
+  },
+  {
+    "page": "alunos",
+    "width": 390,
+    "form": true,
+    "violations": [],
+    "passes": 24
+  },
+  {
+    "page": "planos",
+    "width": 390,
+    "form": false,
+    "violations": [],
+    "passes": 29
+  },
+  {
+    "page": "planos",
+    "width": 390,
+    "form": true,
+    "violations": [],
+    "passes": 24
+  },
+  {
+    "page": "professores",
+    "width": 390,
+    "form": false,
+    "violations": [],
+    "passes": 29
+  },
+  {
+    "page": "professores",
+    "width": 390,
+    "form": true,
+    "violations": [],
+    "passes": 23
+  },
+  {
+    "page": "mensalidades",
+    "width": 390,
+    "form": false,
+    "violations": [],
+    "passes": 29
+  },
+  {
+    "page": "mensalidades",
+    "width": 390,
+    "form": true,
+    "violations": [],
+    "passes": 24
+  },
+  {
+    "page": "treinos",
+    "width": 390,
+    "form": false,
+    "violations": [],
+    "passes": 29
+  },
+  {
+    "page": "treinos",
+    "width": 390,
+    "form": true,
+    "violations": [],
+    "passes": 25
+  },
+  {
+    "page": "avaliacoes",
+    "width": 390,
+    "form": false,
+    "violations": [],
+    "passes": 28
+  },
+  {
+    "page": "avaliacoes",
+    "width": 390,
+    "form": true,
+    "violations": [],
+    "passes": 25
+  },
+  {
+    "page": "historico",
+    "width": 390,
+    "form": false,
+    "violations": [],
+    "passes": 32
+  },
+  {
+    "page": "dashboard",
+    "width": 768,
+    "form": false,
+    "violations": [],
+    "passes": 23
+  },
+  {
+    "page": "alunos",
+    "width": 768,
+    "form": false,
+    "violations": [],
+    "passes": 27
+  },
+  {
+    "page": "alunos",
+    "width": 768,
+    "form": true,
+    "violations": [],
+    "passes": 24
+  },
+  {
+    "page": "planos",
+    "width": 768,
+    "form": false,
+    "violations": [],
+    "passes": 27
+  },
+  {
+    "page": "planos",
+    "width": 768,
+    "form": true,
+    "violations": [],
+    "passes": 24
+  },
+  {
+    "page": "professores",
+    "width": 768,
+    "form": false,
+    "violations": [],
+    "passes": 27
+  },
+  {
+    "page": "professores",
+    "width": 768,
+    "form": true,
+    "violations": [],
+    "passes": 23
+  },
+  {
+    "page": "mensalidades",
+    "width": 768,
+    "form": false,
+    "violations": [],
+    "passes": 27
+  },
+  {
+    "page": "mensalidades",
+    "width": 768,
+    "form": true,
+    "violations": [],
+    "passes": 24
+  },
+  {
+    "page": "treinos",
+    "width": 768,
+    "form": false,
+    "violations": [],
+    "passes": 27
+  },
+  {
+    "page": "treinos",
+    "width": 768,
+    "form": true,
+    "violations": [],
+    "passes": 24
+  },
+  {
+    "page": "avaliacoes",
+    "width": 768,
+    "form": false,
+    "violations": [],
+    "passes": 26
+  },
+  {
+    "page": "avaliacoes",
+    "width": 768,
+    "form": true,
+    "violations": [],
+    "passes": 24
+  },
+  {
+    "page": "historico",
+    "width": 768,
+    "form": false,
+    "violations": [],
+    "passes": 30
+  },
+  {
+    "page": "dashboard",
+    "width": 1366,
+    "form": false,
+    "violations": [],
+    "passes": 23
+  },
+  {
+    "page": "alunos",
+    "width": 1366,
+    "form": false,
+    "violations": [],
+    "passes": 26
+  },
+  {
+    "page": "alunos",
+    "width": 1366,
+    "form": true,
+    "violations": [],
+    "passes": 24
+  },
+  {
+    "page": "planos",
+    "width": 1366,
+    "form": false,
+    "violations": [],
+    "passes": 26
+  },
+  {
+    "page": "planos",
+    "width": 1366,
+    "form": true,
+    "violations": [],
+    "passes": 24
+  },
+  {
+    "page": "professores",
+    "width": 1366,
+    "form": false,
+    "violations": [],
+    "passes": 27
+  },
+  {
+    "page": "professores",
+    "width": 1366,
+    "form": true,
+    "violations": [],
+    "passes": 23
+  },
+  {
+    "page": "mensalidades",
+    "width": 1366,
+    "form": false,
+    "violations": [],
+    "passes": 26
+  },
+  {
+    "page": "mensalidades",
+    "width": 1366,
+    "form": true,
+    "violations": [],
+    "passes": 24
+  },
+  {
+    "page": "treinos",
+    "width": 1366,
+    "form": false,
+    "violations": [],
+    "passes": 27
+  },
+  {
+    "page": "treinos",
+    "width": 1366,
+    "form": true,
+    "violations": [],
+    "passes": 24
+  },
+  {
+    "page": "avaliacoes",
+    "width": 1366,
+    "form": false,
+    "violations": [],
+    "passes": 25
+  },
+  {
+    "page": "avaliacoes",
+    "width": 1366,
+    "form": true,
+    "violations": [],
+    "passes": 24
+  },
+  {
+    "page": "historico",
+    "width": 1366,
+    "form": false,
+    "violations": [],
+    "passes": 29
+  },
+  {
+    "page": "dashboard",
+    "width": 1920,
+    "form": false,
+    "violations": [],
+    "passes": 23
+  },
+  {
+    "page": "alunos",
+    "width": 1920,
+    "form": false,
+    "violations": [],
+    "passes": 26
+  },
+  {
+    "page": "alunos",
+    "width": 1920,
+    "form": true,
+    "violations": [],
+    "passes": 24
+  },
+  {
+    "page": "planos",
+    "width": 1920,
+    "form": false,
+    "violations": [],
+    "passes": 26
+  },
+  {
+    "page": "planos",
+    "width": 1920,
+    "form": true,
+    "violations": [],
+    "passes": 24
+  },
+  {
+    "page": "professores",
+    "width": 1920,
+    "form": false,
+    "violations": [],
+    "passes": 26
+  },
+  {
+    "page": "professores",
+    "width": 1920,
+    "form": true,
+    "violations": [],
+    "passes": 23
+  },
+  {
+    "page": "mensalidades",
+    "width": 1920,
+    "form": false,
+    "violations": [],
+    "passes": 26
+  },
+  {
+    "page": "mensalidades",
+    "width": 1920,
+    "form": true,
+    "violations": [],
+    "passes": 24
+  },
+  {
+    "page": "treinos",
+    "width": 1920,
+    "form": false,
+    "violations": [],
+    "passes": 26
+  },
+  {
+    "page": "treinos",
+    "width": 1920,
+    "form": true,
+    "violations": [],
+    "passes": 24
+  },
+  {
+    "page": "avaliacoes",
+    "width": 1920,
+    "form": false,
+    "violations": [],
+    "passes": 25
+  },
+  {
+    "page": "avaliacoes",
+    "width": 1920,
+    "form": true,
+    "violations": [],
+    "passes": 24
+  },
+  {
+    "page": "historico",
+    "width": 1920,
+    "form": false,
+    "violations": [],
+    "passes": 29
+  },
+  {
+    "page": "login",
+    "width": 390,
+    "violations": []
+  }
+]

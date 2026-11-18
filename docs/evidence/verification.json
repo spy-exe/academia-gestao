@@ -1,0 +1,66 @@
+{
+  "recordedAt": "2026-11-18T18:52:23.924259+00:00",
+  "scope": "Verificação local; fechamento do domínio anexado à release do commit aprovado",
+  "tests": {
+    "backend": 32,
+    "frontend": 85,
+    "playwright": 20,
+    "operations": 7
+  },
+  "coverage": {
+    "backend": {
+      "BRANCH": {
+        "covered": 120,
+        "missed": 8
+      },
+      "LINE": {
+        "covered": 563,
+        "missed": 3
+      }
+    },
+    "frontend": {
+      "lines": {
+        "total": 477,
+        "covered": 460,
+        "skipped": 0,
+        "pct": 96.43
+      },
+      "statements": {
+        "total": 528,
+        "covered": 502,
+        "skipped": 0,
+        "pct": 95.07
+      },
+      "functions": {
+        "total": 213,
+        "covered": 200,
+        "skipped": 0,
+        "pct": 93.89
+      },
+      "branches": {
+        "total": 575,
+        "covered": 528,
+        "skipped": 0,
+        "pct": 91.82
+      },
+      "branchesTrue": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": "Unknown"
+      }
+    }
+  },
+  "visual": {
+    "pageScreenshots": 40,
+    "reviewedBaselines": 45,
+    "mobileStates": 11,
+    "pageOverflow": 0,
+    "pageErrors": 0
+  },
+  "accessibility": {
+    "audits": 71,
+    "violations": 0
+  },
+  "runtimeSbomComponents": 99
+}

@@ -7,9 +7,13 @@ Aplicação administrativa em português para organizar alunos, planos, professo
 - Segurança: sessão de servidor, BCrypt, CSRF e primeira conta criada localmente, sem senha padrão.
 - Financeiro: valores BigDecimal, preço histórico, emissão idempotente e restrição contra períodos sobrepostos.
 
-## Estado da entrega
+## Verificação
 
-Desenvolvimento ativo. Os módulos possuem API e interface integradas. A validação de cobertura, regressão visual, acessibilidade e CI continua em andamento. As evidências executadas e as pendências são acompanhadas em [tasks/todo.md](tasks/todo.md). Publicação incremental não equivale à aprovação final.
+Os seis módulos possuem API, interface e persistência reais. A validação local registrou 32 testes Java, 85 testes de frontend, 20 cenários Playwright e 7 testes de publicação aprovados. A cobertura é 99,47% de linhas / 93,75% de branches no backend e 96,43% / 91,82% no frontend.
+
+O [relatório técnico](docs/verification.md) descreve escopo, evidências e limites. A [execução do CI](https://github.com/spy-exe/academia-gestao/actions/workflows/quality.yml) valida o commit; o fechamento operacional e as medições do domínio são anexados à [release](https://github.com/spy-exe/academia-gestao/releases/latest). Credenciais são fornecidas privadamente.
+
+Capturas: [alunos no celular](docs/evidence/alunos-mobile-final.png), [formulário](docs/evidence/mobile-form-aluno.png), [dashboard](docs/evidence/dashboard-1366.png). As 45 baselines ficam em `frontend/tests/e2e/visual.spec.ts-snapshots`.
 
 ## Executar
 
@@ -65,7 +69,7 @@ npm test
 npm run build
 ```
 
-Para E2E, execute backend, PostgreSQL e frontend reais; defina `E2E_BASE_URL`, `E2E_EMAIL` e `E2E_PASSWORD`. Depois execute `npx playwright install --with-deps chromium` e `npm run test:e2e`. Os testes de aceitação não substituem a API por mocks.
+Para E2E, execute backend, PostgreSQL e frontend reais; defina `E2E_BASE_URL`, `E2E_EMAIL` e `E2E_PASSWORD`. Defina também `E2E_RUNTIME=process` e grave o PID do backend em `/tmp/academia-backend.pid`. Execute o seed explícito num banco isolado com sufixo `_demo` antes das baselines; não use o banco público para esse comando. Depois execute `npx playwright install --with-deps chromium`, `npm run build`, inicie `npx vite preview --host 127.0.0.1 --port 4173` e execute `npm run test:e2e`. Os testes de aceitação não substituem a API por mocks.
 
 ## Demonstração
 
@@ -76,3 +80,7 @@ Acesso aos registros exige autenticação. Pagamentos são registros administrat
 ## Organização
 
 `backend/` contém os domínios e migrations. `frontend/` contém componentes, formulários e testes. `infrastructure/` reúne rotinas operacionais sem segredos. `docs/evidence/` contém capturas e verificações. Os contratos visuais e de interação ficam em `DESIGN.md` e `UX-CONTRACT.md`.
+
+## Operação e apresentação
+
+Consulte [deploy, backup e rollback](docs/operations.md), [segurança](docs/security.md) e o [roteiro de demonstração](docs/demonstration.md). O deploy utiliza os artefatos do commit aprovado no CI, sem recompilar no servidor de publicação. Todos os serviços e ferramentas de desenvolvimento ficam na VM isolada, sem instalação da aplicação no host PVE.

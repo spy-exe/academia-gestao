@@ -1,0 +1,68 @@
+[
+  {
+    "state": "form-aluno",
+    "width": 390,
+    "height": 844,
+    "overflow": false
+  },
+  {
+    "state": "form-plano",
+    "width": 390,
+    "height": 844,
+    "overflow": false
+  },
+  {
+    "state": "form-professor",
+    "width": 390,
+    "height": 844,
+    "overflow": false
+  },
+  {
+    "state": "form-mensalidade",
+    "width": 390,
+    "height": 844,
+    "overflow": false
+  },
+  {
+    "state": "form-treino",
+    "width": 390,
+    "height": 844,
+    "overflow": false
+  },
+  {
+    "state": "form-avaliacao",
+    "width": 390,
+    "height": 844,
+    "overflow": false
+  },
+  {
+    "state": "vazio",
+    "width": 390,
+    "height": 844,
+    "overflow": false
+  },
+  {
+    "state": "validacao",
+    "width": 390,
+    "height": 844,
+    "overflow": false
+  },
+  {
+    "state": "erro-conexao",
+    "width": 390,
+    "height": 844,
+    "overflow": false
+  },
+  {
+    "state": "carregando",
+    "width": 390,
+    "height": 844,
+    "overflow": false
+  },
+  {
+    "state": "navegacao",
+    "width": 390,
+    "height": 844,
+    "overflow": false
+  }
+]
