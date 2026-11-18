@@ -1,0 +1,12 @@
+/* Only calendar-dependent text is hidden; records, amounts, states and layout remain visible. */
+.topbar-date,
+.activity-list > li > small,
+td[data-format="date"],
+[data-format="date"] dd,
+td[data-field="competence"],
+[data-field="competence"] dd,
+.chart-wrap tbody td:first-child,
+.detail-summary > div:nth-child(4) dd,
+.detail-summary > div:nth-child(5) dd {
+  color: transparent !important;
+}

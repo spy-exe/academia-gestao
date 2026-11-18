@@ -18,9 +18,17 @@ export default defineConfig({
   projects: [
     { name: "setup", testMatch: /auth.setup.ts/ },
     {
-      name: "chromium",
+      name: "visual",
+      testMatch: /visual.spec.ts/,
       dependencies: ["setup"],
-      testIgnore: /auth.setup.ts/,
+      use: {
+        storageState: process.env.E2E_AUTH_STATE ?? "/tmp/academia-auth.json",
+      },
+    },
+    {
+      name: "chromium",
+      dependencies: ["setup", "visual"],
+      testIgnore: /auth.setup.ts|visual.spec.ts/,
       use: {
         storageState: process.env.E2E_AUTH_STATE ?? "/tmp/academia-auth.json",
       },

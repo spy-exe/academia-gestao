@@ -1,0 +1,17 @@
+{
+  "profile": "product-admin",
+  "sourceRoots": ["frontend/src"],
+  "canonicalMap": "UX-CONTRACT.md",
+  "ownership": { "Select/Listbox": "native", "Date": "native" },
+  "requiredCapabilities": ["Select/Listbox", "Date", "Form", "Scrollbar", "Toast", "CRUD"],
+  "requiredCommands": ["unit", "browser", "accessibility"],
+  "commands": {
+    "unit": "cd frontend && npm test",
+    "browser": "cd frontend && npm run test:e2e",
+    "accessibility": "cd frontend && node scripts/audit-accessibility.mjs"
+  },
+  "evidence": {
+    "crudFullFlow": "frontend/tests/e2e/critical.spec.ts",
+    "failurePaths": "frontend/tests/draft-safety.test.tsx"
+  }
+}
