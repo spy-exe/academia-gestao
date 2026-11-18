@@ -9,7 +9,7 @@ Aplicação administrativa em português para organizar alunos, planos, professo
 
 ## Verificação
 
-Os seis módulos possuem API, interface e persistência reais. A validação local registrou 32 testes Java, 85 testes de frontend, 21 cenários Playwright e 7 testes de publicação aprovados. A cobertura é 99,47% de linhas / 93,75% de branches no backend e 96,43% / 91,82% no frontend.
+Os seis módulos possuem API, interface e persistência reais. A validação local registrou 32 testes Java, 85 testes de frontend, 21 cenários Playwright e 8 testes de publicação aprovados. A cobertura é 99,47% de linhas / 93,75% de branches no backend e 96,43% / 91,82% no frontend.
 
 O [relatório técnico](docs/verification.md) descreve escopo, evidências e limites. A [execução do CI](https://github.com/spy-exe/academia-gestao/actions/workflows/quality.yml) valida o commit; o fechamento operacional e as medições do domínio são anexados à [release](https://github.com/spy-exe/academia-gestao/releases/latest). Credenciais são fornecidas privadamente.
 

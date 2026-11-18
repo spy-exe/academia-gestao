@@ -33,12 +33,12 @@ O dashboard consulta agregações reais da API. Pagamentos não acionam bancos; 
 | JUnit 5 / Mockito / Testcontainers PostgreSQL | 32 testes aprovados, sem falhas nem testes ignorados |
 | Vitest / React Testing Library | 85 testes aprovados em 8 arquivos |
 | Playwright, backend e banco reais | 21 testes aprovados |
-| Contratos de deploy e rollback | 7 testes aprovados |
+| Contratos de deploy e rollback | 8 testes aprovados |
 | ESLint, TypeScript, Prettier e build Vite | Aprovados |
 | Auditoria estática de UI | Zero erros e avisos |
 | Lint DESIGN.md | Zero erros, seis avisos de tokens sem referência no próprio documento |
 
-Os sete testes operacionais simulam falhas externas para verificar troca de release, recuperação, timeouts, integridade e exclusão mútua. Eles não são apresentados como substitutos do ensaio real de publicação e rollback, registrado na release.
+Os oito testes operacionais simulam falhas externas para verificar troca de release, recuperação, timeouts, integridade e exclusão mútua. Eles não são apresentados como substitutos do ensaio real de publicação e rollback, registrado na release.
 
 ### Cobertura
 
@@ -74,6 +74,7 @@ O axe executou 71 auditorias de páginas e formulários nos viewports, sem viola
 | Média | Ações escondidas em tabelas no celular: registros empilhados com botões visíveis |
 | Média | Contraste insuficiente em duas superfícies: cores corrigidas e 71 auditorias repetidas |
 | Média | Tentativas bloqueadas por CSP: impedir injeção do beacon no HTML e usar validação Zod sem compilação dinâmica |
+| Média | Manifesto não legível sob `umask 077`: modo público explícito, verificação prévia de leitura e teste de regressão |
 | Média | Consultas adicionais por associação: EntityGraphs apenas to-one, com paginação preservada |
 
 A auditoria automatizada aguarda as animações finitas dos diálogos antes de medir contraste; não há exclusão de regras de acessibilidade.

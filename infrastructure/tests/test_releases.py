@@ -62,9 +62,10 @@ if sys.argv[-1].endswith('version.json'):print(json.dumps({'commit':sha}))
         (folder / "SHA256SUMS").write_text("".join(
             f"{hashlib.sha256((folder / f).read_bytes()).hexdigest()}  {f}\n" for f in files))
 
-    def execute(self, script, *args, **env):
+    def execute(self, script, *args, private_umask=False, **env):
         return subprocess.run([str(SCRIPTS / script), *map(str, args)],
-                              env=dict(self.env, **env), capture_output=True, text=True, timeout=10)
+                              env=dict(self.env, **env), capture_output=True, text=True, timeout=10,
+                              umask=0o077 if private_umask else 0o022)
 
     def deploy(self, **env):
         return self.execute("deploy.sh", TARGET, self.jar, self.dist, **env)
@@ -105,6 +106,12 @@ if sys.argv[-1].endswith('version.json'):print(json.dumps({'commit':sha}))
         result = self.execute("rollback.sh", TARGET)
         self.assertNotEqual(result.returncode, 0)
         self.assertEqual((self.root / "current").resolve().name, PREVIOUS)
+
+    def test_manifest_remains_readable_with_private_operator_umask(self):
+        result = self.deploy(private_umask=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        manifest = self.root / "releases" / TARGET / "frontend/version.json"
+        self.assertTrue(manifest.stat().st_mode & 0o004, "O Nginx precisa ler o manifesto público.")
 
     def test_concurrent_publication_is_rejected(self):
         with (self.root / ".release.lock").open("w") as lock:

@@ -20,8 +20,10 @@ install -m 644 "$artifact_jar" "$release_dir/backend.jar"
 cp -a "$artifact_frontend/." "$release_dir/frontend/"
 chown -R root:root "$release_dir"
 printf '{"commit":"%s"}\n' "$release_sha" > "$release_dir/frontend/version.json"
+chmod 644 "$release_dir/frontend/version.json"
 (cd "$release_dir" && find backend.jar frontend -type f -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS)
 runuser -u www-data -- test -r "$release_dir/frontend/index.html"
+runuser -u www-data -- test -r "$release_dir/frontend/version.json"
 previous_release=""
 if [[ -L "$application_root/current" ]]; then previous_release="$(readlink -f "$application_root/current")"; fi
 if activate_release "$release_dir"; then

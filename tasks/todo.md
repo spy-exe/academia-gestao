@@ -14,7 +14,7 @@
 - [x] Lighthouse, acessibilidade e revisão independente.
 - [x] Scan de segredos/dependências e documentação IntelliJ/operação.
 - [x] GitHub público e CI aprovada.
-- [x] Backup real restaurado em banco temporário e sete contratos operacionais aprovados.
+- [x] Backup real restaurado em banco temporário e oito contratos operacionais aprovados.
 - [x] Publicação externa ou dependência documentada.
 
 O fechamento operacional é registrado como evidência imutável na release vinculada ao commit, sem reescrever o histórico.
