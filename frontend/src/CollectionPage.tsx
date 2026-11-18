@@ -98,7 +98,7 @@ export function CollectionPage({
         if (reset) next.delete(`${prefix}page`);
         return next;
       },
-      { replace: true },
+      { replace: true, preventScrollReset: true },
     );
   }
   useEffect(() => {
@@ -112,7 +112,7 @@ export function CollectionPage({
           next.delete(`${prefix}page`);
           return next;
         },
-        { replace: true },
+        { replace: true, preventScrollReset: true },
       );
     }, 300);
     return () => clearTimeout(timer);
@@ -162,7 +162,7 @@ export function CollectionPage({
           );
           return next;
         },
-        { replace: true },
+        { replace: true, preventScrollReset: true },
       );
     }
   }, [data.data, page, prefix, setParams]);

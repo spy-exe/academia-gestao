@@ -22,3 +22,5 @@ Busca com atraso de 300ms, respeitando composição IME, cancelamento via TanSta
 Todos os fluxos têm carregamento, erro, vazio e sucesso; menus/modais restauram foco. Requisições limitadas, nenhuma escrita enfileirada offline. Conflitos de versão rejeitam sobrescrita com instrução para recarregar. Feedback compartilhado com live region; erros críticos permanecem inline. Todas as rotas têm título, sem botões inertes ou links fictícios.
 
 Em celular, os registros têm a mesma origem, paginação, filtros e ações da tabela. A mudança de representação não cria outro estado de dados. Histórico do aluno alterna mensalidades, treinos e avaliações; navegação que troque o painel também exige confirmação quando há edição pendente. Valores e versão são capturados juntos na abertura do formulário. Falha de revalidação conserva o rascunho. A busca de referência usa Enter para buscar, sem submeter o formulário. Modais restauram o foco do controle de origem.
+
+Novas rotas iniciam no topo. Voltar restaura a posição anterior; pesquisas, filtros e troca de histórico preservam o contexto da página.

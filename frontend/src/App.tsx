@@ -8,6 +8,7 @@ import {
   useLocation,
   useNavigate,
   useBlocker,
+  ScrollRestoration,
 } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { MotionConfig, motion } from "motion/react";
@@ -133,6 +134,7 @@ function Shell() {
   };
   return (
     <DirtyFormContext.Provider value={setUnsaved}>
+      <ScrollRestoration />
       <a className="skip-link" href="#content">
         Pular para o conteúdo
       </a>

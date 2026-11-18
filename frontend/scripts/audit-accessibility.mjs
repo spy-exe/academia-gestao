@@ -27,8 +27,22 @@ for (const width of [360, 390, 768, 1366, 1920]) {
     await page.goto(base + path);
     await page.waitForLoadState("networkidle");
     for (const form of action ? [false, true] : [false]) {
-      if (form)
+      if (form) {
         await page.getByRole("button", { name: action, exact: true }).click();
+        await page.getByRole("dialog").evaluate(async (element) => {
+          const animations = element
+            .getAnimations({ subtree: true })
+            .filter(
+              (animation) =>
+                animation.effect?.getComputedTiming().iterations !== Infinity,
+            );
+          await Promise.all(
+            animations.map((animation) =>
+              animation.finished.catch(() => undefined),
+            ),
+          );
+        });
+      }
       const audit = await new AxeBuilder({ page })
         .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
         .analyze();

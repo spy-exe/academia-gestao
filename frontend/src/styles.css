@@ -974,6 +974,18 @@ tbody tr:hover {
   padding: 14px 22px;
   color: var(--color-danger);
 }
+.overlay[data-state="closed"],
+.dialog[data-state="closed"] {
+  animation: fade-out 0.15s ease;
+}
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
 @keyframes fade {
   from {
     opacity: 0;

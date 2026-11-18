@@ -32,7 +32,7 @@ O dashboard consulta agregações reais da API. Pagamentos não acionam bancos; 
 |---|---|
 | JUnit 5 / Mockito / Testcontainers PostgreSQL | 32 testes aprovados, sem falhas nem testes ignorados |
 | Vitest / React Testing Library | 85 testes aprovados em 8 arquivos |
-| Playwright, backend e banco reais | 20 testes aprovados |
+| Playwright, backend e banco reais | 21 testes aprovados |
 | Contratos de deploy e rollback | 7 testes aprovados |
 | ESLint, TypeScript, Prettier e build Vite | Aprovados |
 | Auditoria estática de UI | Zero erros e avisos |
@@ -51,9 +51,9 @@ Os gates exigem pelo menos 90% de linhas e 85% de branches. O backend não exclu
 
 ### Aceitação de ponta a ponta
 
-Os 20 testes incluem autenticação, dez testes visuais com 45 comparações de screenshot e nove cenários de aplicação. O fluxo completo cria plano/aluno/professor, associa plano, emite mensalidade duas vezes sem duplicar, registra pagamento, verifica receita, cria ficha com exercícios reordenados, registra avaliações, consulta evolução, edita, arquiva e confirma persistência após reiniciar a API real.
+Os 21 testes incluem autenticação, dez testes visuais com 45 comparações de screenshot e dez cenários de aplicação. O fluxo completo cria plano/aluno/professor, associa plano, emite mensalidade duas vezes sem duplicar, registra pagamento, verifica receita, cria ficha com exercícios reordenados, registra avaliações, consulta evolução, edita, arquiva e confirma persistência após reiniciar a API real.
 
-Há verificações de acesso anônimo, CSRF, entradas inválidas, CRUD pelo celular, seis formulários em 360px, rotação com rascunho, foco, viewport reduzido, movimento reduzido e violações CSP capturadas pelo Chromium. Esses testes de aceitação não usam mocks da API.
+Há verificações de acesso anônimo, CSRF, entradas inválidas, CRUD pelo celular, seis formulários em 360px, rotação com rascunho, foco, restauração de rolagem ao navegar e voltar, viewport reduzido, movimento reduzido e violações CSP capturadas pelo Chromium. Esses testes de aceitação não usam mocks da API.
 
 ## Inspeção visual e acessibilidade
 
@@ -75,6 +75,8 @@ O axe executou 71 auditorias de páginas e formulários nos viewports, sem viola
 | Média | Contraste insuficiente em duas superfícies: cores corrigidas e 71 auditorias repetidas |
 | Média | Tentativas bloqueadas por CSP: impedir injeção do beacon no HTML e usar validação Zod sem compilação dinâmica |
 | Média | Consultas adicionais por associação: EntityGraphs apenas to-one, com paginação preservada |
+
+A auditoria automatizada aguarda as animações finitas dos diálogos antes de medir contraste; não há exclusão de regras de acessibilidade.
 
 A revisão final não identificou problemas altos ou críticos remanescentes no escopo examinado.
 

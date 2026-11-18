@@ -165,3 +165,35 @@ test("formulário mantém ações acessíveis com viewport baixo e movimento red
     page.getByRole("button", { name: "Novo aluno", exact: true }),
   ).toBeFocused();
 });
+
+test("navegação móvel inicia a página no topo e Voltar restaura a lista", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  await expect(
+    page.getByRole("heading", { name: "Visão geral", exact: true }),
+  ).toBeVisible();
+  const nav = page.getByRole("navigation", { name: "Navegação rápida" });
+  await nav.getByRole("link", { name: "Alunos", exact: true }).click();
+  await page
+    .getByRole("list", { name: "Alunos", exact: true })
+    .locator("li")
+    .last()
+    .scrollIntoViewIfNeeded();
+  await page.evaluate(() => document.fonts.ready);
+  const position = await page.evaluate(() => scrollY);
+  expect(position).toBeGreaterThan(500);
+  await nav.getByRole("link", { name: "Visão geral", exact: true }).click();
+  await expect(
+    page.getByRole("heading", { name: "Visão geral", exact: true }),
+  ).toBeVisible();
+  await expect.poll(() => page.evaluate(() => scrollY)).toBe(0);
+  await page.goBack();
+  await expect(
+    page.getByRole("heading", { name: "Alunos", exact: true }),
+  ).toBeVisible();
+  await expect
+    .poll(async () => Math.abs((await page.evaluate(() => scrollY)) - position))
+    .toBeLessThan(2);
+});

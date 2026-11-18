@@ -1,10 +1,10 @@
 {
-  "recordedAt": "2026-11-18T18:52:23.924259+00:00",
+  "recordedAt": "2026-11-18T19:11:48.224338+00:00",
   "scope": "Verificação local; fechamento do domínio anexado à release do commit aprovado",
   "tests": {
     "backend": 32,
     "frontend": 85,
-    "playwright": 20,
+    "playwright": 21,
     "operations": 7
   },
   "coverage": {

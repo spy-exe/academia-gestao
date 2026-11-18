@@ -230,11 +230,14 @@ export function StudentDetail() {
               key={item.kind}
               aria-pressed={historyKind === item.kind}
               onClick={() =>
-                setParams((previous) => {
-                  const next = new URLSearchParams(previous);
-                  next.set("historico", item.kind);
-                  return next;
-                })
+                setParams(
+                  (previous) => {
+                    const next = new URLSearchParams(previous);
+                    next.set("historico", item.kind);
+                    return next;
+                  },
+                  { preventScrollReset: true },
+                )
               }
             >
               {item.label}
