@@ -22,9 +22,9 @@ INSERT INTO teachers(id,name,email,phone,specialties,registration,active) VALUES
  (1003,'Sofia Lima','sofia.lima@example.test','(11) 99800-2003','Mobilidade e aulas coletivas','DEMO-1003',true)
 ON CONFLICT(id) DO NOTHING;
 INSERT INTO invoices(id,student_id,competence,due_date,amount,period_months,paid_on) VALUES
- (1001,1001,date_trunc('month',current_date)::date,current_date-8,189.90,1,current_date-5),
- (1002,1002,date_trunc('month',current_date)::date,current_date-7,139.90,1,current_date-4),
- (1003,1003,date_trunc('month',current_date)::date,current_date-6,499.90,3,current_date-3),
+ (1001,1001,date_trunc('month',current_date)::date,current_date-8,189.90,1,current_date),
+ (1002,1002,date_trunc('month',current_date)::date,current_date-7,139.90,1,current_date),
+ (1003,1003,date_trunc('month',current_date)::date,current_date-6,499.90,3,current_date),
  (1004,1004,date_trunc('month',current_date)::date,current_date+7,189.90,1,null),
  (1005,1005,date_trunc('month',current_date)::date,current_date+5,139.90,1,null),
  (1006,1006,date_trunc('month',current_date)::date,current_date-10,139.90,1,null),

@@ -1,0 +1,40 @@
+# Install in the isolated application's VM. TLS terminates at the authorized Cloudflare tunnel.
+# The origin must be reachable only from the trusted tunnel/network; never trust forwarded headers from arbitrary clients.
+map $http_x_forwarded_proto $academia_scheme {
+    default $scheme;
+    https https;
+}
+limit_req_zone $binary_remote_addr zone=academia_login:1m rate=5r/m;
+map $sent_http_content_type $academia_html_cache_control {
+    default "";
+    "~^text/html" "public, no-cache, no-transform";
+}
+server {
+    listen 80;
+    server_name academia.malha.app;
+    root /opt/academia/current/frontend;
+    index index.html;
+    client_max_body_size 256k;
+    if ($academia_scheme != https) { return 308 https://academia.malha.app$request_uri; }
+    add_header Cache-Control $academia_html_cache_control always;
+    add_header Strict-Transport-Security "max-age=31536000" always;
+    add_header X-Content-Type-Options nosniff always;
+    add_header X-Frame-Options DENY always;
+    add_header Referrer-Policy strict-origin-when-cross-origin always;
+    add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'" always;
+    location = /api/auth/login {
+        limit_req zone=academia_login burst=5 nodelay;
+        proxy_pass http://127.0.0.1:8080;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Proto $academia_scheme;
+    }
+    location /api/ {
+        proxy_pass http://127.0.0.1:8080;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Proto $academia_scheme;
+    }
+    location = /health { proxy_pass http://127.0.0.1:8080/actuator/health; }
+    location /assets/ { expires 1y; try_files $uri =404; }
+    location / { try_files $uri $uri/ /index.html; }
+}
