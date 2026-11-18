@@ -5,12 +5,12 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.fasterxml.jackson.databind.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import tools.jackson.databind.*;
 
 class FinanceTrainingTest extends IntegrationSupport {
-  private final ObjectMapper json = new ObjectMapper();
+  private final ObjectMapper json = tools.jackson.databind.json.JsonMapper.builder().build();
 
   JsonNode create(String path, String body) throws Exception {
     return json.readTree(

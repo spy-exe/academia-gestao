@@ -21,7 +21,7 @@ class DirectoryTest extends IntegrationSupport {
                             + " teste\",\"price\":149.90,\"periodMonths\":1,\"benefits\":\"Musculação\",\"active\":true}"))
             .andExpect(status().isCreated())
             .andReturn();
-    var json = new com.fasterxml.jackson.databind.ObjectMapper();
+    var json = tools.jackson.databind.json.JsonMapper.builder().build();
     long id = json.readTree(plan.getResponse().getContentAsString()).get("id").asLong();
     mvc.perform(
             post("/api/students")

@@ -19,6 +19,7 @@ class BootstrapTest {
     var encoder = mock(PasswordEncoder.class);
     when(encoder.encode("A-long-test-only-password!")).thenReturn("encoded-hash");
     try (var context = new AnnotationConfigApplicationContext()) {
+      context.refresh();
       var env =
           new MockEnvironment()
               .withProperty("ADMIN_EMAIL", " ADMIN@EXAMPLE.TEST ")
@@ -36,6 +37,7 @@ class BootstrapTest {
     var repository = mock(AdministratorRepository.class);
     when(repository.count()).thenReturn(1L);
     try (var context = new AnnotationConfigApplicationContext()) {
+      context.refresh();
       assertThrows(
           IllegalStateException.class,
           () ->
@@ -60,6 +62,7 @@ class BootstrapTest {
               .withProperty("ADMIN_EMAIL", pair[0])
               .withProperty("ADMIN_PASSWORD", pair[1]);
       try (var context = new AnnotationConfigApplicationContext()) {
+        context.refresh();
         assertThrows(
             IllegalArgumentException.class,
             () ->

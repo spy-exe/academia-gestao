@@ -5,15 +5,15 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.fasterxml.jackson.databind.*;
 import java.time.*;
 import java.util.*;
 import org.junit.jupiter.api.*;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.*;
+import tools.jackson.databind.*;
 
 class DomainApiTest extends IntegrationSupport {
-  private final ObjectMapper json = new ObjectMapper().findAndRegisterModules();
+  private final ObjectMapper json = tools.jackson.databind.json.JsonMapper.builder().build();
 
   Map<String, Object> data(Object... pairs) {
     var map = new LinkedHashMap<String, Object>();

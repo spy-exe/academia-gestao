@@ -14,6 +14,12 @@ O advisory [GHSA-fc5q-39xc-vjpf](https://github.com/advisories/GHSA-fc5q-39xc-vj
 
 Nesta aplicação, os padrões glob são definidos nos arquivos versionados de Vite, Vitest e ESLint; nenhum endpoint recebe ou executa globs. Picomatch não integra o bundle entregue ao navegador nem o processo Java. Builds de contribuições devem ocorrer em runners isolados, sem segredos e com tempo limitado. O achado permanece registrado como risco de ferramenta de desenvolvimento e deve ser reavaliado quando houver correção upstream. A verificação de produção continua bloqueando severidade alta.
 
+## Backend verificado
+
+A aplicação utiliza Java 21 e Spring Boot 4.1.2. O SBOM CycloneDX gerado a partir das dependências resolvidas contém 99 componentes de runtime. Em 18/11/2026, o OSV Scanner 2.7.1 não identificou vulnerabilidades nesse conjunto; o resultado está em `docs/evidence/backend-osv.json`. O CI repete a geração do SBOM e a análise, falhando diante de achados. Essa análise não substitui a revisão do código ou atualizações futuras.
+
+Os testes mantêm JUnit Jupiter 5.14.4 e Testcontainers. O contexto real é iniciado pelo harness de integração, que evita depender da extensão de testes de Spring Boot 4, baseada em JUnit 6.
+
 ## Dados e operação
 
 Seeds usam dados fictícios e exigem seleção explícita do ambiente de demonstração. Backups ficam em diretório privado, sem inclusão em Git. Contas, senhas, tokens, chaves e configurações operacionais do PVE não são arquivos do projeto. Não se afirma ausência absoluta de vulnerabilidades; os relatórios identificam ferramenta, escopo e data da verificação.
