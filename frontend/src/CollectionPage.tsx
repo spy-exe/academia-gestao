@@ -1,6 +1,13 @@
+import { useMobile } from "./useMobile";
+import { MobileRecords } from "./MobileRecords";
 import { useState, useEffect, useRef } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  keepPreviousData,
+} from "@tanstack/react-query";
 import {
   Plus,
   Search,
@@ -12,6 +19,7 @@ import {
   ChevronRight,
   ArrowDownUp,
   Eye,
+  LoaderCircle,
 } from "lucide-react";
 import { request, mutate, type Entity, type Page } from "./api";
 import { modules } from "./registry";
@@ -38,7 +46,9 @@ function cell(value: unknown, format?: string) {
     return (value as Entity | undefined)?.name ?? "Sem plano";
   return value === null || value === undefined || value === ""
     ? "—"
-    : String(value);
+    : typeof value === "number"
+      ? value.toLocaleString("pt-BR", { maximumFractionDigits: 2 })
+      : String(value);
 }
 export function CollectionPage({
   kind,
@@ -49,6 +59,7 @@ export function CollectionPage({
   studentId?: number;
   compact?: boolean;
 }) {
+  const isMobile = useMobile();
   const spec = modules[kind];
   const [params, setParams] = useSearchParams();
   const prefix = compact ? `${kind}-` : "";
@@ -66,6 +77,16 @@ export function CollectionPage({
   const [action, setAction] = useState<{ item: Entity; pay: boolean }>();
   const [detail, setDetail] = useState<Entity>();
   const [localError, setLocalError] = useState("");
+  const openingSequence = useRef(0);
+  const openingController = useRef<AbortController | null>(null);
+  const [openingId, setOpeningId] = useState<number>();
+  useEffect(
+    () => () => {
+      openingSequence.current++;
+      openingController.current?.abort();
+    },
+    [],
+  );
   const cache = useQueryClient();
   const feedback = useFeedback();
   function change(key: string, value: string, reset = true) {
@@ -126,6 +147,7 @@ export function CollectionPage({
   if (kind === "students" && planId) query.set("planId", planId);
   const data = useQuery({
     queryKey: [kind, query.toString()],
+    placeholderData: keepPreviousData,
     queryFn: ({ signal }) =>
       request<Page<Entity>>(`/${kind}?${query}`, { signal }),
   });
@@ -164,32 +186,143 @@ export function CollectionPage({
       setAction(undefined);
     },
   });
-  async function edit(item: Entity) {
+  function openNew() {
+    openingSequence.current++;
+    openingController.current?.abort();
+    setOpeningId(undefined);
+    setEditing(null);
+  }
+  async function openRecord(item: Entity, editRecord: boolean) {
+    if (editing !== undefined || detail) return;
+    const sequence = ++openingSequence.current;
+    openingController.current?.abort();
+    const controller = new AbortController();
+    openingController.current = controller;
+    setOpeningId(item.id);
     setLocalError("");
     try {
-      const full = await request<Entity>(`/${kind}/${item.id}`);
-      setEditing(full);
-    } catch (e) {
-      setLocalError((e as Error).message);
+      const full = await request<Entity>(`/${kind}/${item.id}`, {
+        signal: controller.signal,
+      });
+      if (sequence !== openingSequence.current) return;
+      if (editRecord) setEditing(full);
+      else setDetail(full);
+    } catch (error) {
+      if (
+        sequence === openingSequence.current &&
+        !(error instanceof DOMException && error.name === "AbortError")
+      )
+        setLocalError((error as Error).message);
+    } finally {
+      if (sequence === openingSequence.current) {
+        setOpeningId(undefined);
+        openingController.current = null;
+      }
     }
   }
-  async function inspect(item: Entity) {
-    setLocalError("");
-    try {
-      setDetail(await request<Entity>(`/${kind}/${item.id}`));
-    } catch (e) {
-      setLocalError((e as Error).message);
-    }
+  function rowActions(item: Entity, mobile = false) {
+    const buttonClass = mobile ? "button neutral mobile-action" : "icon-button";
+    const inspectAction =
+      mobile && kind === "students" ? (
+        <Link
+          className="button neutral mobile-action history-action"
+          to={`/alunos/${item.id}`}
+          aria-label={`Histórico de ${item.name}`}
+        >
+          <Eye size={16} />
+          Histórico
+        </Link>
+      ) : (
+        <button
+          className={buttonClass}
+          title="Consultar"
+          aria-label={`Consultar ${item.name ?? spec.singular}`}
+          onClick={() =>
+            kind === "students" ? setSelected(item) : openRecord(item, false)
+          }
+        >
+          <Eye size={16} />
+          {mobile ? "Consultar" : null}
+        </button>
+      );
+    return (
+      <div className={mobile ? "mobile-record-actions" : "actions"}>
+        {mobile && kind !== "invoices" ? inspectAction : null}
+        {kind === "invoices" ? (
+          item.status !== "PAID" ? (
+            <button
+              className={
+                mobile
+                  ? "button primary mobile-action payment-action"
+                  : buttonClass
+              }
+              title="Registrar pagamento"
+              aria-label={`Registrar pagamento de ${(item.student as Entity).name}`}
+              onClick={() => {
+                operation.reset();
+                setAction({ item, pay: true });
+              }}
+            >
+              <Check size={17} />
+              {mobile ? "Registrar pagamento" : null}
+            </button>
+          ) : null
+        ) : (
+          <>
+            <button
+              className={buttonClass}
+              title="Editar"
+              aria-label={`Editar ${item.name ?? spec.singular}`}
+              onClick={() => openRecord(item, true)}
+            >
+              {openingId === item.id ? (
+                <LoaderCircle className="spin" size={16} />
+              ) : (
+                <Pencil size={16} />
+              )}{" "}
+              {mobile ? "Editar" : null}
+            </button>
+            {kind !== "assessments" && item.active ? (
+              <button
+                className={
+                  mobile
+                    ? "button ghost mobile-action archive-action"
+                    : buttonClass
+                }
+                title="Arquivar"
+                aria-label={`Arquivar ${item.name}`}
+                onClick={() => {
+                  operation.reset();
+                  setAction({ item, pay: false });
+                }}
+              >
+                <Archive size={16} />
+                {mobile ? "Arquivar" : null}
+              </button>
+            ) : null}
+          </>
+        )}
+        {!mobile || kind === "invoices" ? inspectAction : null}
+      </div>
+    );
   }
   return (
     <section className={compact ? "section-gap" : ""}>
       {!compact ? (
         <div className="page-heading">
           <div>
-            <h1>{spec.title}</h1>
+            <div className="title-row">
+              <h1>{spec.title}</h1>
+              <span
+                className="record-count"
+                aria-label={`${data.data?.totalElements ?? 0} registros`}
+              >
+                {data.data?.totalElements ?? "—"}
+              </span>
+            </div>
             <p>{spec.description}</p>
           </div>
-          <Button onClick={() => setEditing(null)}>
+          <Button onClick={openNew}>
             <Plus size={17} />
             {spec.action}
           </Button>
@@ -199,14 +332,17 @@ export function CollectionPage({
         {compact ? (
           <div className="panel-heading">
             <h2>{spec.title}</h2>
-            <Button tone="neutral" onClick={() => setEditing(null)}>
+            <Button tone="neutral" onClick={openNew}>
               <Plus size={15} />
               {spec.action}
             </Button>
           </div>
         ) : null}
-        <div className="table-toolbar">
+        <div
+          className={`table-toolbar ${kind === "assessments" ? "no-filter" : ""}`}
+        >
           <form
+            noValidate
             className="search"
             role="search"
             onSubmit={(e) => {
@@ -219,9 +355,11 @@ export function CollectionPage({
               ref={inputRef}
               aria-label={`Pesquisar ${spec.title.toLowerCase()}`}
               placeholder={
-                kind === "invoices" || kind === "assessments"
-                  ? "Pesquisar por aluno…"
-                  : `Pesquisar ${spec.title.toLowerCase()}…`
+                isMobile
+                  ? "Buscar…"
+                  : kind === "invoices" || kind === "assessments"
+                    ? "Pesquisar por aluno…"
+                    : `Pesquisar ${spec.title.toLowerCase()}…`
               }
               value={search}
               onCompositionStart={() => setComposing(true)}
@@ -250,7 +388,9 @@ export function CollectionPage({
               value={filter}
               onChange={(e) => change("filter", e.target.value)}
             >
-              <option value="">Todos os status</option>
+              <option value="">
+                {isMobile ? "Status: todos" : "Todos os status"}
+              </option>
               {kind === "invoices" ? (
                 <>
                   <option value="OPEN">Em aberto</option>
@@ -264,6 +404,26 @@ export function CollectionPage({
                 </>
               )}
             </select>
+          ) : null}
+          {isMobile ? (
+            <button
+              type="button"
+              className="mobile-sort"
+              aria-label={`Ordenar por ${sort === "name" ? "nome" : sort === "dueDate" ? "vencimento" : "data"}: ${direction === "asc" ? "crescente" : "decrescente"}`}
+              onClick={() =>
+                change("direction", direction === "asc" ? "desc" : "asc")
+              }
+            >
+              <ArrowDownUp size={16} />
+              <span>
+                {sort === "name"
+                  ? "Nome"
+                  : sort === "dueDate"
+                    ? "Vencimento"
+                    : "Data"}{" "}
+                {direction === "asc" ? "↑" : "↓"}
+              </span>
+            </button>
           ) : null}
         </div>
         {localError ? (
@@ -283,23 +443,31 @@ export function CollectionPage({
                 : `Use “${spec.action}” para adicionar um registro.`
             }
           />
+        ) : isMobile ? (
+          <MobileRecords
+            items={data.data.content}
+            kind={kind}
+            spec={spec}
+            renderCell={cell}
+            renderActions={rowActions}
+          />
         ) : (
           <div className="table-scroll">
             <table>
               <thead>
                 <tr>
-                  {spec.columns.map((c, index) => (
+                  {spec.columns.map((c) => (
                     <th
                       key={c.key}
                       aria-sort={
-                        index === 0
+                        c.key === sort
                           ? direction === "asc"
                             ? "ascending"
                             : "descending"
                           : undefined
                       }
                     >
-                      {index === 0 ? (
+                      {c.key === sort ? (
                         <button
                           onClick={() =>
                             change(
@@ -325,7 +493,7 @@ export function CollectionPage({
                 {data.data.content.map((item) => (
                   <tr key={item.id}>
                     {spec.columns.map((c, index) => (
-                      <td key={c.key}>
+                      <td key={c.key} data-field={c.key} data-format={c.format}>
                         {index === 0 &&
                         kind !== "invoices" &&
                         kind !== "assessments" ? (
@@ -345,7 +513,7 @@ export function CollectionPage({
                               ) : (
                                 <button
                                   className="name-button"
-                                  onClick={() => inspect(item)}
+                                  onClick={() => openRecord(item, false)}
                                 >
                                   <strong>{item.name}</strong>
                                 </button>
@@ -360,61 +528,7 @@ export function CollectionPage({
                         )}
                       </td>
                     ))}
-                    <td>
-                      <div className="actions">
-                        {kind === "invoices" ? (
-                          item.status !== "PAID" ? (
-                            <button
-                              className="icon-button"
-                              title="Registrar pagamento"
-                              aria-label={`Registrar pagamento de ${(item.student as Entity).name}`}
-                              onClick={() => {
-                                operation.reset();
-                                setAction({ item, pay: true });
-                              }}
-                            >
-                              <Check size={17} />
-                            </button>
-                          ) : null
-                        ) : (
-                          <>
-                            <button
-                              className="icon-button"
-                              title="Editar"
-                              aria-label={`Editar ${item.name ?? spec.singular}`}
-                              onClick={() => edit(item)}
-                            >
-                              <Pencil size={16} />
-                            </button>
-                            {kind !== "assessments" && item.active ? (
-                              <button
-                                className="icon-button"
-                                title="Arquivar"
-                                aria-label={`Arquivar ${item.name}`}
-                                onClick={() => {
-                                  operation.reset();
-                                  setAction({ item, pay: false });
-                                }}
-                              >
-                                <Archive size={16} />
-                              </button>
-                            ) : null}
-                          </>
-                        )}
-                        <button
-                          className="icon-button"
-                          title="Consultar"
-                          aria-label={`Consultar ${item.name ?? spec.singular}`}
-                          onClick={() =>
-                            kind === "students"
-                              ? setSelected(item)
-                              : inspect(item)
-                          }
-                        >
-                          <Eye size={16} />
-                        </button>
-                      </div>
-                    </td>
+                    <td>{rowActions(item)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -494,6 +608,14 @@ export function CollectionPage({
               ))}
             </dl>
             {detail.notes ? <p>{String(detail.notes)}</p> : null}
+            {kind === "invoices" ? (
+              <dl className="detail-summary">
+                <div>
+                  <dt>Pagamento registrado em</dt>
+                  <dd>{date(detail.paidOn)}</dd>
+                </div>
+              </dl>
+            ) : null}
             {kind === "plans" ? (
               <>
                 <p>{String(detail.benefits)}</p>
@@ -528,7 +650,7 @@ export function CollectionPage({
                             "notes",
                           ].map((key) => (
                             <td key={key}>
-                              {String(ex[key])}
+                              {cell(ex[key])}
                               {key === "loadKg"
                                 ? " kg"
                                 : key === "restSeconds"
@@ -548,7 +670,7 @@ export function CollectionPage({
                 {["waistCm", "chestCm", "hipCm"].map((key, i) => (
                   <div key={key}>
                     <dt>{["Cintura (cm)", "Tórax (cm)", "Quadril (cm)"][i]}</dt>
-                    <dd>{String(detail[key] ?? "—")}</dd>
+                    <dd>{cell(detail[key])}</dd>
                   </div>
                 ))}
               </dl>

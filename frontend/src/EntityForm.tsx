@@ -10,7 +10,7 @@ import { ArrowUp, ArrowDown, Plus, Trash2 } from "lucide-react";
 import { type Entity, type Page, request, mutate, ApiError } from "./api";
 import { schemas, today, type Kind } from "./domain";
 import { modules, type FieldSpec } from "./registry";
-import { Button, Modal, Confirm, useFeedback } from "./ui";
+import { Button, Modal, Confirm, useFeedback, useDirtyForm } from "./ui";
 export function ReferenceField({
   spec,
   value,
@@ -63,6 +63,12 @@ export function ReferenceField({
           placeholder="Digite para buscar…"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" && !event.nativeEvent.isComposing) {
+              event.preventDefault();
+              setQ(search);
+            }
+          }}
         />
         {search ? (
           <button
@@ -108,7 +114,7 @@ export function ReferenceField({
 }
 export function EntityForm({
   kind,
-  item,
+  item: incomingItem,
   open,
   onClose,
   studentId,
@@ -119,6 +125,10 @@ export function EntityForm({
   onClose: () => void;
   studentId?: number;
 }) {
+  const [item] = useState(() =>
+    incomingItem ? structuredClone(incomingItem) : undefined,
+  );
+  const setDirty = useDirtyForm();
   const spec = modules[kind];
   const cache = useQueryClient();
   const feedback = useFeedback();
@@ -176,6 +186,10 @@ export function EntityForm({
     window.addEventListener("beforeunload", warn);
     return () => window.removeEventListener("beforeunload", warn);
   }, [isDirty]);
+  useEffect(() => {
+    setDirty(isDirty);
+    return () => setDirty(false);
+  }, [isDirty, setDirty]);
   const close = () => {
     if (isSubmitting) return;
     if (isDirty) setDiscard(true);

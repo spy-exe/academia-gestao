@@ -1,3 +1,4 @@
+import { useMobile } from "./useMobile";
 import { useState, useEffect, lazy, Suspense } from "react";
 import {
   createBrowserRouter,
@@ -6,6 +7,7 @@ import {
   NavLink,
   useLocation,
   useNavigate,
+  useBlocker,
 } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { MotionConfig, motion } from "motion/react";
@@ -26,10 +28,16 @@ import {
 import { request, mutate } from "./api";
 import { modules } from "./registry";
 import type { Kind } from "./domain";
-const Login = lazy(() =>
-  import("./Login").then((module) => ({ default: module.Login })),
-);
-import { Loading, Failure, Modal, Button, FeedbackProvider } from "./ui";
+import { Login } from "./Login";
+import {
+  Loading,
+  Failure,
+  Modal,
+  Button,
+  FeedbackProvider,
+  Confirm,
+  DirtyFormContext,
+} from "./ui";
 const CollectionPage = lazy(() =>
   import("./CollectionPage").then((module) => ({
     default: module.CollectionPage,
@@ -65,12 +73,21 @@ function Navigation({ onNavigate }: { onNavigate?: () => void }) {
   );
 }
 function Shell() {
+  const isMobile = useMobile();
   const cache = useQueryClient();
   const location = useLocation();
   const navigate = useNavigate();
   const [mobile, setMobile] = useState(false);
   const [expired, setExpired] = useState(false);
   const [logoutError, setLogoutError] = useState("");
+  const [unsaved, setUnsaved] = useState(false);
+  const blocker = useBlocker(
+    ({ currentLocation, nextLocation }) =>
+      unsaved &&
+      (currentLocation.pathname !== nextLocation.pathname ||
+        new URLSearchParams(currentLocation.search).get("historico") !==
+          new URLSearchParams(nextLocation.search).get("historico")),
+  );
   const session = useQuery({
     queryKey: ["session"],
     queryFn: () => request<{ email: string }>("/auth/me"),
@@ -92,12 +109,13 @@ function Shell() {
     document.title = `${title} · Cadência`;
   }, [title]);
   if (session.isPending) return <Loading />;
-  if (session.isError && !("status" in session.error))
+  if (session.isError && !session.data && !("status" in session.error))
     return <Failure error={session.error} retry={() => session.refetch()} />;
   if (!session.data)
     return (
       <Login
         onSuccess={() => {
+          setExpired(false);
           cache.clear();
           session.refetch();
         }}
@@ -114,7 +132,7 @@ function Shell() {
     }
   };
   return (
-    <>
+    <DirtyFormContext.Provider value={setUnsaved}>
       <a className="skip-link" href="#content">
         Pular para o conteúdo
       </a>
@@ -146,7 +164,15 @@ function Shell() {
       </aside>
       <div className="workspace">
         <header className="topbar">
-          <div>
+          <NavLink
+            to="/"
+            className="mobile-brand"
+            aria-label="Cadência · Visão geral"
+          >
+            <Activity size={23} />
+            cadência
+          </NavLink>
+          <div className="breadcrumbs">
             <button
               className="icon-button mobile-menu"
               aria-label="Abrir menu"
@@ -172,6 +198,14 @@ function Shell() {
           </span>
         </header>
         <main id="content" className="page">
+          {session.isError && session.data && !("status" in session.error) ? (
+            <p className="form-error" role="alert">
+              Não foi possível confirmar sua conexão.{" "}
+              <button onClick={() => session.refetch()}>
+                Tentar novamente
+              </button>
+            </p>
+          ) : null}
           <motion.div
             key={location.pathname}
             initial={{ opacity: 0, y: 4 }}
@@ -182,7 +216,26 @@ function Shell() {
           </motion.div>
         </main>
       </div>
+      {isMobile ? (
+        <nav className="bottom-nav" aria-label="Navegação rápida">
+          {links
+            .filter((link) =>
+              ["/", "/alunos", "/mensalidades"].includes(link.to),
+            )
+            .map((link) => (
+              <NavLink key={link.to} to={link.to} end={link.to === "/"}>
+                <link.icon size={21} />
+                <span>{link.label}</span>
+              </NavLink>
+            ))}
+          <button onClick={() => setMobile(true)} aria-label="Mais opções">
+            <Menu size={21} />
+            <span>Mais</span>
+          </button>
+        </nav>
+      ) : null}
       <Modal
+        variant="navigation"
         open={mobile}
         title="Cadência"
         description="Navegue pela gestão da academia."
@@ -203,16 +256,33 @@ function Shell() {
         onClose={() => {}}
       >
         <div className="dialog-body">
-          <Login
-            embedded
-            onSuccess={() => {
-              setExpired(false);
-              cache.invalidateQueries();
-            }}
-          />
+          <Suspense fallback={<Loading />}>
+            <Login
+              embedded
+              onSuccess={() => {
+                setExpired(false);
+                cache.invalidateQueries();
+              }}
+            />
+          </Suspense>
         </div>
       </Modal>
-    </>
+      <Confirm
+        open={blocker.state === "blocked"}
+        title="Descartar alterações?"
+        text="Existem dados que ainda não foram salvos."
+        label="Descartar"
+        onClose={() => {
+          if (blocker.state === "blocked") blocker.reset();
+        }}
+        onConfirm={() => {
+          if (blocker.state === "blocked") {
+            setUnsaved(false);
+            blocker.proceed();
+          }
+        }}
+      />
+    </DirtyFormContext.Provider>
   );
 }
 function NotFound() {

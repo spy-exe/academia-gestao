@@ -68,7 +68,7 @@ export function Dashboard() {
   ];
   return (
     <>
-      <div className="page-heading">
+      <div className="page-heading dashboard-heading">
         <div>
           <p className="eyebrow">SUA ACADEMIA, EM PERSPECTIVA</p>
           <h1>Visão geral</h1>
@@ -94,8 +94,8 @@ export function Dashboard() {
         <section className="panel">
           <div className="panel-heading">
             <div>
-              <h2>Um olhar para o financeiro</h2>
-              <p>Valores reais das mensalidades emitidas</p>
+              <h2>Financeiro</h2>
+              <p>Recebimentos e pendências</p>
             </div>
             <Link
               to="/mensalidades"
@@ -139,7 +139,7 @@ export function Dashboard() {
         <section className="panel">
           <div className="panel-heading">
             <div>
-              <h2>Próximo passo</h2>
+              <h2>Atalhos</h2>
               <p>Acesso rápido à rotina da recepção</p>
             </div>
           </div>

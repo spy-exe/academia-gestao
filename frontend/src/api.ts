@@ -31,7 +31,7 @@ export async function request<T>(
   }
   if (
     (response.status === 401 || response.status === 403) &&
-    !path.startsWith("/auth/")
+    path !== "/auth/login"
   )
     window.dispatchEvent(new Event("session-expired"));
   if (!response.ok) {

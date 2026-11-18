@@ -24,8 +24,8 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      "/api": "http://127.0.0.1:8080",
-      "/actuator": "http://127.0.0.1:8080",
+      "/api": process.env.API_PROXY_TARGET ?? "http://127.0.0.1:8080",
+      "/actuator": process.env.API_PROXY_TARGET ?? "http://127.0.0.1:8080",
     },
   },
   test: {

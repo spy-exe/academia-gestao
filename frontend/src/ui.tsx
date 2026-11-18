@@ -2,6 +2,8 @@ import {
   createContext,
   useContext,
   useState,
+  useRef,
+  useEffect,
   type ReactNode,
   type ButtonHTMLAttributes,
 } from "react";
@@ -71,13 +73,38 @@ export function Modal({
   title,
   description,
   children,
+  variant = "default",
 }: {
+  variant?: "default" | "compact" | "navigation";
   open: boolean;
   onClose: () => void;
   title: string;
   description?: string;
   children: ReactNode;
 }) {
+  const origin = useRef<HTMLElement | null>(null);
+  const content = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (!open) return;
+    const viewport = window.visualViewport;
+    const resize = () => {
+      content.current?.style.setProperty(
+        "--visual-height",
+        `${viewport?.height ?? window.innerHeight}px`,
+      );
+      content.current?.style.setProperty(
+        "--visual-offset-top",
+        `${viewport?.offsetTop ?? 0}px`,
+      );
+    };
+    resize();
+    viewport?.addEventListener("resize", resize);
+    viewport?.addEventListener("scroll", resize);
+    return () => {
+      viewport?.removeEventListener("resize", resize);
+      viewport?.removeEventListener("scroll", resize);
+    };
+  }, [open]);
   return (
     <Dialog.Root
       open={open}
@@ -87,7 +114,27 @@ export function Modal({
     >
       <Dialog.Portal>
         <Dialog.Overlay className="overlay" />
-        <Dialog.Content className="dialog">
+        <Dialog.Content
+          ref={content}
+          className={`dialog ${variant}-dialog`}
+          onOpenAutoFocus={() => {
+            origin.current =
+              document.activeElement instanceof HTMLElement
+                ? document.activeElement
+                : null;
+          }}
+          onCloseAutoFocus={(event) => {
+            event.preventDefault();
+            if (origin.current?.isConnected) origin.current.focus();
+            else {
+              const heading = document.querySelector<HTMLElement>("main h1");
+              if (heading) {
+                heading.tabIndex = -1;
+                heading.focus();
+              }
+            }
+          }}
+        >
           <header>
             <div>
               <Dialog.Title>{title}</Dialog.Title>
@@ -95,10 +142,12 @@ export function Modal({
                 {description ?? "Preencha os dados e salve para concluir."}
               </Dialog.Description>
             </div>
-            <Dialog.Close asChild>
-              <button type="button" className="icon-button" aria-label="Fechar">
-                <X size={20} />
-              </button>
+            <Dialog.Close
+              type="button"
+              className="icon-button"
+              aria-label="Fechar"
+            >
+              <X size={20} />
             </Dialog.Close>
           </header>
           {children}
@@ -128,6 +177,7 @@ export function Confirm({
 }) {
   return (
     <Modal
+      variant="compact"
       open={open}
       onClose={() => {
         if (!busy) onClose();
@@ -160,6 +210,11 @@ export function Confirm({
 const FeedbackContext = createContext<(message: string) => void>(() => {});
 export function FeedbackProvider({ children }: { children: ReactNode }) {
   const [message, setMessage] = useState("");
+  useEffect(() => {
+    if (!message) return;
+    const timer = setTimeout(() => setMessage(""), 6000);
+    return () => clearTimeout(timer);
+  }, [message]);
   return (
     <FeedbackContext.Provider value={setMessage}>
       {children}
@@ -196,3 +251,8 @@ export function Badge({ value }: { value: unknown }) {
     </span>
   );
 }
+
+export const DirtyFormContext = createContext<(dirty: boolean) => void>(
+  () => {},
+);
+export const useDirtyForm = () => useContext(DirtyFormContext);

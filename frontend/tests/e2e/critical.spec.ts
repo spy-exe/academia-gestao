@@ -178,7 +178,7 @@ test("fluxo completo de gestão com persistência real", async ({ page }) => {
     page.getByRole("img", { name: /Evolução de Peso/ }),
   ).toBeVisible();
   await expect(page.getByText(workoutName, { exact: true })).toBeVisible();
-  await expect(page.getByText("24.69", { exact: true })).toBeVisible();
+  await expect(page.getByText("24,69", { exact: true })).toBeVisible();
   await page
     .getByRole("button", { name: "Editar cadastro", exact: true })
     .click();
@@ -202,7 +202,14 @@ test("fluxo completo de gestão com persistência real", async ({ page }) => {
       exact: true,
     })
     .click();
+  const archived = page.waitForResponse(
+    (response) =>
+      new URL(response.url()).pathname === `/api/students/${student.id}` &&
+      response.request().method() === "DELETE",
+  );
   await page.getByRole("button", { name: "Arquivar", exact: true }).click();
+  expect((await archived).status()).toBe(204);
+  await expect(page.getByRole("dialog")).toHaveCount(0);
   await page.reload();
   await expect(
     page.getByRole("row").filter({ hasText: studentName }),

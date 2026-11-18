@@ -1,5 +1,6 @@
+import { useMobile } from "./useMobile";
 import { useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, useSearchParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Pencil } from "lucide-react";
 import { request, type Entity, type Page } from "./api";
@@ -9,6 +10,16 @@ import { EntityForm } from "./EntityForm";
 import { CollectionPage } from "./CollectionPage";
 export function StudentDetail() {
   const { id } = useParams();
+  const isMobile = useMobile();
+  const [params, setParams] = useSearchParams();
+  const historyKinds = [
+    { kind: "invoices", label: "Mensalidades" },
+    { kind: "workouts", label: "Treinos" },
+    { kind: "assessments", label: "Avaliações" },
+  ] as const;
+  const historyKind =
+    historyKinds.find((item) => item.kind === params.get("historico"))?.kind ??
+    "invoices";
   const [editing, setEditing] = useState(false);
   const [measure, setMeasure] = useState("weightKg");
   const student = useQuery({
@@ -23,9 +34,12 @@ export function StudentDetail() {
         { signal },
       ),
   });
-  if (student.isPending) return <Loading />;
-  if (student.isError)
-    return <Failure error={student.error} retry={() => student.refetch()} />;
+  if (!student.data)
+    return student.isError ? (
+      <Failure error={student.error} retry={() => student.refetch()} />
+    ) : (
+      <Loading />
+    );
   const s = student.data;
   const points = [...(assessments.data?.content ?? [])]
     .reverse()
@@ -123,6 +137,23 @@ export function StudentDetail() {
           />
         ) : points.length ? (
           <div className="chart-wrap">
+            {isMobile ? (
+              <div className="latest-measure">
+                <span>Último registro</span>
+                <strong>
+                  {values
+                    .at(-1)
+                    ?.toLocaleString("pt-BR", { maximumFractionDigits: 2 })}
+                  <small>
+                    {measure.endsWith("Cm")
+                      ? " cm"
+                      : measure === "weightKg"
+                        ? " kg"
+                        : ""}
+                  </small>
+                </strong>
+              </div>
+            ) : null}
             <svg
               viewBox="0 0 500 150"
               role="img"
@@ -188,9 +219,34 @@ export function StudentDetail() {
           />
         )}
       </section>
-      <CollectionPage kind="invoices" studentId={s.id} compact />
-      <CollectionPage kind="workouts" studentId={s.id} compact />
-      <CollectionPage kind="assessments" studentId={s.id} compact />
+      {isMobile ? (
+        <div
+          className="history-switch"
+          role="group"
+          aria-label="Selecionar histórico"
+        >
+          {historyKinds.map((item) => (
+            <button
+              key={item.kind}
+              aria-pressed={historyKind === item.kind}
+              onClick={() =>
+                setParams((previous) => {
+                  const next = new URLSearchParams(previous);
+                  next.set("historico", item.kind);
+                  return next;
+                })
+              }
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+      ) : null}
+      {historyKinds.map((item) => (
+        <div key={item.kind} hidden={isMobile && historyKind !== item.kind}>
+          <CollectionPage kind={item.kind} studentId={s.id} compact />
+        </div>
+      ))}
       {editing ? (
         <EntityForm
           kind="students"

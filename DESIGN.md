@@ -59,3 +59,7 @@ Movimento de 180ms, apenas opacidade e deslocamento de 4px. Respeitar preferênc
 
 ## Do's and Don'ts
 Usar textos de ação concretos e português consistente. Não mostrar dados fictícios fora do seed explícito. Não esconder ações em hover. Não usar apenas cor para estados.
+
+### Mobile
+
+Até 600px, as listas usam registros empilhados com dados e ações visíveis. A hierarquia é nome/status, informações em duas colunas e ações com rótulos. Nenhuma ação principal depende de rolagem lateral. A navegação inferior oferece visão geral, alunos, mensalidades e menu completo. Formulários ocupam a área visível, com corpo rolável, cabeçalho e ações fixos; confirmações permanecem compactas. Campos usam fonte de 16px, e a área segura do dispositivo é respeitada.

@@ -1,5 +1,11 @@
 import { beforeEach, it, expect, vi } from "vitest";
-import { render, screen, waitFor, fireEvent } from "@testing-library/react";
+import {
+  render,
+  screen,
+  waitFor,
+  within,
+  fireEvent,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { App } from "../src/App";
@@ -140,4 +146,29 @@ it("login mostra erro de credenciais, permite alternar senha e repetir", async (
   await screen.findByText("Não foi possível entrar.");
   await user.click(screen.getByRole("button", { name: /Entrar na academia/ }));
   await waitFor(() => expect(success).toHaveBeenCalled());
+});
+it("navegação de celular mantém atalhos e todos os módulos acessíveis", async () => {
+  Object.defineProperty(window, "matchMedia", {
+    writable: true,
+    value: vi.fn(() => ({
+      matches: true,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+    })),
+  });
+  const user = userEvent.setup();
+  app();
+  await screen.findByRole("heading", { name: "Visão geral" });
+  const navigation = screen.getByRole("navigation", {
+    name: "Navegação rápida",
+  });
+  await user.click(
+    within(navigation).getByRole("button", { name: "Mais opções" }),
+  );
+  const dialog = screen.getByRole("dialog", { name: "Cadência" });
+  await user.click(within(dialog).getByRole("link", { name: "Planos" }));
+  await screen.findByRole("heading", { name: "Planos" });
+  expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
 });
