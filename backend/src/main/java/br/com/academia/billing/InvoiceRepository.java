@@ -2,10 +2,17 @@ package br.com.academia.billing;
 
 import java.time.LocalDate;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.*;
 
 public interface InvoiceRepository
     extends JpaRepository<Invoice, Long>, JpaSpecificationExecutor<Invoice> {
+  @Override
+  @EntityGraph(attributePaths = {"student", "student.plan"})
+  Page<Invoice> findAll(Specification<Invoice> specification, Pageable pageable);
+
   Optional<Invoice> findByStudentIdAndCompetence(long studentId, LocalDate competence);
 
   @Query(
